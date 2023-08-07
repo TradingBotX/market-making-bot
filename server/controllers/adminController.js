@@ -574,7 +574,7 @@ exports.getDataByTimestamp = async (req, res) => {
 exports.addKey = async (req, res) => {
   try {
     const data = fs.readFileSync(
-      path.resolve(__dirname, "./helpers/data.json"),
+      path.resolve(__dirname, "../helpers/data.json"),
       "UTF-8"
     );
     const secret = JSON.parse(data).secret;
