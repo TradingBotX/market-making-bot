@@ -1,0 +1,244 @@
+export const LOGIN_START = "LOGIN_START";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAIL = "LOGIN_FAIL";
+export const LOGIN_FINISH = "LOGIN_FINISH";
+
+export const LOGOUT_START = "LOGOUT_START";
+export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
+export const LOGOUT_FAIL = "LOGOUT_FAIL";
+export const LOGOUT_FINISH = "LOGOUT_FINISH";
+
+export const SOCKET_RECONNECTING = "SOCKET_RECONNECTING";
+export const SOCKET_DISCONNECTED = "SOCKET_DISCONNECTED";
+export const SOCKET_CONNECTED = "SOCKET_CONNECTED";
+
+/*
+  -----------------------------------------------------
+
+  Management Action Starts
+
+  -----------------------------------------------------
+*/
+
+export const EXCHANGE_ADD_START = "EXCHANGE_ADD_START";
+export const EXCHANGE_ADD_SUCCESS = "EXCHANGE_ADD_SUCCESS";
+export const EXCHANGE_ADD_FAIL = "EXCHANGE_ADD_FAIL";
+export const EXCHANGE_ADD_FINISH = "EXCHANGE_ADD_FINISH";
+
+export const EXCHANGE_GET_START = "EXCHANGE_GET_START";
+export const EXCHANGE_GET_SUCCESS = "EXCHANGE_GET_SUCCESS";
+export const EXCHANGE_GET_FAIL = "EXCHANGE_GET_FAIL";
+export const EXCHANGE_GET_FINISH = "EXCHANGE_GET_FINISH";
+
+export const EXCHANGE_ACTIVATE_START = "EXCHANGE_ACTIVATE_START";
+export const EXCHANGE_ACTIVATE_SUCCESS = "EXCHANGE_ACTIVATE_SUCCESS";
+export const EXCHANGE_ACTIVATE_FAIL = "EXCHANGE_ACTIVATE_FAIL";
+export const EXCHANGE_ACTIVATE_FINISH = "EXCHANGE_ACTIVATE_FINISH";
+
+export const EXCHANGE_DEACTIVATE_START = "EXCHANGE_DEACTIVATE_START";
+export const EXCHANGE_DEACTIVATE_SUCCESS = "EXCHANGE_DEACTIVATE_SUCCESS";
+export const EXCHANGE_DEACTIVATE_FAIL = "EXCHANGE_DEACTIVATE_FAIL";
+export const EXCHANGE_DEACTIVATE_FINISH = "EXCHANGE_DEACTIVATE_FINISH";
+
+export const EXCHANGE_UPDT_TF_START = "EXCHANGE_UPDT_TF_START";
+export const EXCHANGE_UPDT_TF_SUCCESS = "EXCHANGE_UPDT_TF_SUCCESS";
+export const EXCHANGE_UPDT_TF_FAIL = "EXCHANGE_UPDT_TF_FAIL";
+export const EXCHANGE_UPDT_TF_FINISH = "EXCHANGE_UPDT_TF_FINISH";
+
+export const EXCHANGE_ADD_PAIR_START = "EXCHANGE_ADD_PAIR_START";
+export const EXCHANGE_ADD_PAIR_SUCCESS = "EXCHANGE_ADD_PAIR_SUCCESS";
+export const EXCHANGE_ADD_PAIR_FAIL = "EXCHANGE_ADD_PAIR_FAIL";
+export const EXCHANGE_ADD_PAIR_FINISH = "EXCHANGE_ADD_PAIR_FINISH";
+
+export const EXCHANGE_UPDATE_PAIR_START = "EXCHANGE_UPDATE_PAIR_START";
+export const EXCHANGE_UPDATE_PAIR_SUCCESS = "EXCHANGE_UPDATE_PAIR_SUCCESS";
+export const EXCHANGE_UPDATE_PAIR_FAIL = "EXCHANGE_UPDATE_PAIR_FAIL";
+export const EXCHANGE_UPDATE_PAIR_FINISH = "EXCHANGE_UPDATE_PAIR_FINISH";
+
+export const EXCHANGE_CURRENCY_GET_START = "EXCHANGE_CURRENCY_GET_START";
+export const EXCHANGE_CURRENCY_GET_SUCCESS = "EXCHANGE_CURRENCY_GET_SUCCESS";
+export const EXCHANGE_CURRENCY_GET_FAIL = "EXCHANGE_CURRENCY_GET_FAIL";
+export const EXCHANGE_CURRENCY_GET_FINISH = "EXCHANGE_CURRENCY_GET_FINISH";
+
+export const EXCHANGE_CURRENCY_ADD_START = "EXCHANGE_CURRENCY_ADD_START";
+export const EXCHANGE_CURRENCY_ADD_SUCCESS = "EXCHANGE_CURRENCY_ADD_SUCCESS";
+export const EXCHANGE_CURRENCY_ADD_FAIL = "EXCHANGE_CURRENCY_ADD_FAIL";
+export const EXCHANGE_CURRENCY_ADD_FINISH = "EXCHANGE_CURRENCY_ADD_FINISH";
+
+export const ADD_EXCHANGE_CURRENCY_START = "ADD_EXCHANGE_CURRENCY_START";
+export const ADD_EXCHANGE_CURRENCY_SUCCESS = "ADD_EXCHANGE_CURRENCY_SUCCESS";
+export const ADD_EXCHANGE_CURRENCY_FAIL = "ADD_EXCHANGE_CURRENCY_FAIL";
+export const ADD_EXCHANGE_CURRENCY_FINISH = "ADD_EXCHANGE_CURRENCY_FINISH";
+
+export const UPDATE_EXCHANGE_CURRENCY_START = "UPDATE_EXCHANGE_CURRENCY_START";
+export const UPDATE_EXCHANGE_CURRENCY_SUCCESS =
+  "UPDATE_EXCHANGE_CURRENCY_SUCCESS";
+export const UPDATE_EXCHANGE_CURRENCY_FAIL = "UPDATE_EXCHANGE_CURRENCY_FAIL";
+export const UPDATE_EXCHANGE_CURRENCY_FINISH =
+  "UPDATE_EXCHANGE_CURRENCY_FINISH";
+
+/*
+  -----------------------------------------------------
+
+  Management Action Stops
+
+  -----------------------------------------------------
+*/
+
+/*
+  -----------------------------------------------------
+
+  Management - Arbitrage Action Starts
+
+  -----------------------------------------------------
+*/
+
+export const GET_ARBITRAGE_START = "GET_ARBITRAGE_START";
+export const GET_ARBITRAGE_SUCCESS = "GET_ARBITRAGE_SUCCESS";
+export const GET_ARBITRAGE_FAIL = "GET_ARBITRAGE_FAIL";
+export const GET_ARBITRAGE_FINISH = "GET_ARBITRAGE_FINISH";
+
+/*
+  -----------------------------------------------------
+
+  Management - Arbitrage Action Stops
+
+  -----------------------------------------------------
+*/
+
+/*
+  -----------------------------------------------------
+
+  Admin Starts
+
+  -----------------------------------------------------
+*/
+export const GET_ADMIN_START = "GET_ADMIN_START";
+export const GET_ADMIN_SUCCESS = "GET_ADMIN_SUCCESS";
+export const GET_ADMIN_FAIL = "GET_ADMIN_FAIL";
+export const GET_ADMIN_FINISH = "GET_ADMIN_FINISH";
+
+export const ADD_ADMIN_START = "ADD_ADMIN_START";
+export const ADD_ADMIN_SUCCESS = "ADD_ADMIN_SUCCESS";
+export const ADD_ADMIN_FAIL = "ADD_ADMIN_FAIL";
+export const ADD_ADMIN_FINISH = "ADD_ADMIN_FINISH";
+
+export const REMOVE_ADMIN_START = "REMOVE_ADMIN_START";
+export const REMOVE_ADMIN_SUCCESS = "REMOVE_ADMIN_SUCCESS";
+export const REMOVE_ADMIN_FAIL = "REMOVE_ADMIN_FAIL";
+export const REMOVE_ADMIN_FINISH = "REMOVE_ADMIN_FINISH";
+
+/*
+  -----------------------------------------------------
+
+  Admin Stops
+
+  -----------------------------------------------------
+*/
+
+/*
+  -----------------------------------------------------
+
+  Admin Profile Starts
+
+  -----------------------------------------------------
+*/
+
+export const UPDATE_ADMIN_PROFILE_START = "UPDATE_ADMIN_PROFILE_START";
+export const UPDATE_ADMIN_PROFILE_SUCCESS = "UPDATE_ADMIN_PROFILE_SUCCESS";
+export const UPDATE_ADMIN_PROFILE_FAIL = "UPDATE_ADMIN_PROFILE_FAIL";
+export const UPDATE_ADMIN_PROFILE_FINISH = "UPDATE_ADMIN_PROFILE_FINISH";
+
+/*
+  -----------------------------------------------------
+
+  Admin Profile Stops
+
+  -----------------------------------------------------
+*/
+
+/*
+  -----------------------------------------------------
+
+  Adjust Balance Starts
+
+  -----------------------------------------------------
+*/
+
+export const ADJUST_BALANCE_START = "ADJUST_BALANCE_START";
+export const ADJUST_BALANCE_SUCCESS = "ADJUST_BALANCE_SUCCESS";
+export const ADJUST_BALANCE_FAIL = "ADJUST_BALANCE_FAIL";
+export const ADJUST_BALANCE_FINISH = "ADJUST_BALANCE_FINISH";
+
+export const GET_ALL_ADJUSTMENT_START = "GET_ALL_ADJUSTMENT_START";
+export const GET_ALL_ADJUSTMENT_SUCCESS = "GET_ALL_ADJUSTMENT_SUCCESS";
+export const GET_ALL_ADJUSTMENT_FAIL = "GET_ALL_ADJUSTMENT_FAIL";
+export const GET_ALL_ADJUSTMENT_FINISH = "GET_ALL_ADJUSTMENT_FINISH";
+
+export const GET_ADJUSTMENT_BETWEEN_START = "GET_ADJUSTMENT_BETWEEN_START";
+export const GET_ADJUSTMENT_BETWEEN_SUCCESS = "GET_ADJUSTMENT_BETWEEN_SUCCESS";
+export const GET_ADJUSTMENT_BETWEEN_FAIL = "GET_ADJUSTMENT_BETWEEN_FAIL";
+export const GET_ADJUSTMENT_BETWEEN_FINISH = "GET_ADJUSTMENT_BETWEEN_FINISH";
+
+export const GET_ADJT_SUM_BETWEEN_START = "GET_ADJT_SUM_BETWEEN_START";
+export const GET_ADJT_SUM_BETWEEN_SUCCESS = "GET_ADJT_SUM_BETWEEN_SUCCESS";
+export const GET_ADJT_SUM_BETWEEN_FAIL = "GET_ADJT_SUM_BETWEEN_FAIL";
+export const GET_ADJT_SUM_BETWEEN_FINISH = "GET_ADJT_SUM_BETWEEN_FINISH";
+
+/*
+  -----------------------------------------------------
+
+  Adjust Balance Stops
+
+  -----------------------------------------------------
+*/
+
+/*
+  -----------------------------------------------------
+
+  Daily Stats Start
+
+  -----------------------------------------------------
+*/
+
+export const GET_DAILY_STATS_TIME_START = "GET_DAILY_STATS_TIME_START";
+export const GET_DAILY_STATS_TIME_SUCCESS = "GET_DAILY_STATS_TIME_SUCCESS";
+export const GET_DAILY_STATS_TIME_FAIL = "GET_DAILY_STATS_TIME_FAIL";
+export const GET_DAILY_STATS_TIME_FINISH = "GET_DAILY_STATS_TIME_FINISH";
+
+export const GET_DAILY_STATS_DATA_START = "GET_DAILY_STATS_DATA_START";
+export const GET_DAILY_STATS_DATA_SUCCESS = "GET_DAILY_STATS_DATA_SUCCESS";
+export const GET_DAILY_STATS_DATA_FAIL = "GET_DAILY_STATS_DATA_FAIL";
+export const GET_DAILY_STATS_DATA_FINISH = "GET_DAILY_STATS_DATA_FINISH";
+
+/*
+  -----------------------------------------------------
+
+  Daily Stats Stop
+
+  -----------------------------------------------------
+*/
+
+export const GET_LIQUIDITY_BOT_START = "GET_LIQUIDITY_BOT_START";
+export const GET_LIQUIDITY_BOT_SUCCESS = "GET_LIQUIDITY_BOT_SUCCESS";
+export const GET_LIQUIDITY_BOT_FAIL = "GET_LIQUIDITY_BOT_FAIL";
+export const GET_LIQUIDITY_BOT_FINISH = "GET_LIQUIDITY_BOT_FINISH";
+
+export const CANCEL_ORDER_LIQUIDITY_BOT_START =
+  "CANCEL_ORDER_LIQUIDITY_BOT_START";
+export const CANCEL_ORDER_LIQUIDITY_BOT_SUCCESS =
+  "CANCEL_ORDER_LIQUIDITY_BOT_SUCCESS";
+export const CANCEL_ORDER_LIQUIDITY_BOT_FAIL =
+  "CANCEL_ORDER_LIQUIDITY_BOT_FAIL";
+export const CANCEL_ORDER_LIQUIDITY_BOT_FINISH =
+  "CANCEL_ORDER_LIQUIDITY_BOT_FINISH";
+
+export const GET_KEYS_BOT_START = "GET_KEYS_BOT_START";
+export const GET_KEYS_BOT_SUCCESS = "GET_KEYS_BOT_SUCCESS";
+export const GET_KEYS_BOT_FAIL = "GET_KEYS_BOT_FAIL";
+export const GET_KEYS_BOT_FINISH = "GET_KEYS_BOT_FINISH";
+
+export const DELETE_KEYS_BOT_START = "DELETE_KEYS_BOT_START";
+export const DELETE_KEYS_BOT_SUCCESS = "DELETE_KEYS_BOT_SUCCESS";
+export const DELETE_KEYS_BOT_FAIL = "DELETE_KEYS_BOT_FAIL";
+export const DELETE_KEYS_BOT_FINISH = "DELETE_KEYS_BOT_FINISH";

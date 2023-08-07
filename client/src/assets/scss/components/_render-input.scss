@@ -1,0 +1,12 @@
+.render-input {
+  margin: 0.5rem;
+  font-size: $overall-font-primary;
+
+  input {
+    font-size: $overall-font-primary;
+  }
+
+  .render-input {
+    font-size: $overall-font-primary * $typo-scale-ratio;
+  }
+}

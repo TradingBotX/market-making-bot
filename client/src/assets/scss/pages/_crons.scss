@@ -1,0 +1,17 @@
+.crons {
+  .table-footer {
+    font-size: $overall-font-secondary;
+    float: right;
+    padding: 0 1rem;
+    text-transform: uppercase;
+  }
+
+  .table-header {
+    margin-left: 1rem;
+    margin-top: 2rem;
+    font-weight: 500;
+    font-size: $overall-font-primary;
+    text-align: center;
+    border-bottom: 0.5px solid $color-primary-lighter;
+  }
+}

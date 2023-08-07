@@ -1,0 +1,106 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  z-index: 3;
+  width: $sidebar-width;
+  transition: width $sidebar-width-transaition;
+  height: 100%;
+  font-size: $overall-font-primary;
+  background-color: $color-primary;
+  color: white;
+  padding-top: $header-height;
+
+  &__nav-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 90%;
+
+    /**
+
+    For mozilla scrollbar
+
+    */
+    scrollbar-color: $color-primary $color-primary;
+    scrollbar-width: thin;
+  }
+
+  &__nav-wrapper::-webkit-scrollbar {
+    width: $sidebar-scroller-width;
+  }
+
+  &__nav-wrapper::-webkit-scrollbar-track {
+    background: $color-primary;
+  }
+
+  &__nav-wrapper:hover {
+    scrollbar-color: $color-primary-lighter $color-primary;
+    scrollbar-width: $sidebar-scroller-width;
+    &::-webkit-scrollbar-thumb {
+      background-color: $color-primary-lighter; /* color of the scroll thumb */
+    }
+  }
+
+  &-nav {
+    margin: 1rem;
+    height: 5rem;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 0.5rem;
+
+    &--text {
+      visibility: hidden;
+    }
+  }
+
+  &-nav:hover {
+    background-color: $white !important;
+    color: $color-primary !important;
+  }
+
+  &-nav__active {
+    background-color: $white !important;
+    color: $color-primary !important;
+    pointer-events: none;
+  }
+
+  &-none {
+    .sidebar-nav {
+      display: none !important;
+    }
+  }
+
+  &-toggle,
+  &-toggle:active {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 1rem;
+    margin-left: 2rem;
+    border: 0;
+    background-color: $white !important;
+    color: $color-primary !important;
+    outline: none;
+    box-shadow: none !important;
+  }
+}
+
+.sidebar-open {
+  width: 20rem;
+  transition: width $sidebar-width-transaition;
+
+  .sidebar-nav {
+    text-align: left;
+    .sidebar-nav--icon {
+      display: inline-block !important;
+      width: 3rem;
+      transform: translateX(1rem);
+    }
+    .sidebar-nav--text {
+      display: inline-block !important;
+      visibility: visible;
+      margin-left: $overall-font-primary;
+      transition-duration: 0s;
+      transition-property: visibility;
+      transition-delay: calc(#{$sidebar-width-transaition}/ (3 / 2));
+    }
+  }
+}

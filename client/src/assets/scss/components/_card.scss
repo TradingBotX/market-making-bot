@@ -1,0 +1,16 @@
+.simple-card {
+  padding: 1rem;
+  margin: 1rem;
+
+  &--header {
+    text-align: center;
+    font-weight: 500;
+    font-size: $overall-font-primary;
+  }
+
+  &--body {
+    padding: 1rem;
+    margin: 1rem;
+    font-size: $overall-font-secondary;
+  }
+}

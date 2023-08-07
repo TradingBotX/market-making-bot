@@ -1,0 +1,11 @@
+.select {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  select {
+    width: 40%;
+    font-size: 15px;
+    padding: 4px 8px;
+    outline: none;
+  }
+}

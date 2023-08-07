@@ -1,0 +1,153 @@
+.u-tex-center {
+  text-align: center;
+}
+
+.u-right {
+  text-align: right;
+}
+
+.u-pad-right-1 {
+  padding-right: 1rem;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.u-margin-bottom-8 {
+  margin-bottom: 8rem;
+}
+
+.u-float-left {
+  float: left;
+}
+
+.u-float-right {
+  float: right;
+}
+
+.u-border-btm {
+  border-bottom: 1px solid $color-light-grey;
+}
+
+.lg-hori-1 {
+  @media screen and (max-width: 992px) {
+    padding-bottom: 1rem;
+  }
+}
+
+.u-back-light {
+  &:hover {
+    background-color: $color-primary-light;
+  }
+}
+
+.u-text-right {
+  text-align: right;
+}
+
+.u-scroll-x {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.u-border-top {
+  border-top: 1px solid $color-light-grey;
+}
+
+.u-justify-center {
+  justify-content: center;
+}
+
+.u-text-left {
+  text-align: left !important;
+}
+
+.u-no-pad-r {
+  padding-right: 0 !important;
+}
+
+.u-no-pad-l {
+  padding-left: 0 !important;
+}
+
+.u-no-pad-r--lg {
+  @media screen and (min-width: $lg-width) {
+    padding-right: 0 !important;
+  }
+}
+
+.u-no-pad-l--lg {
+  @media screen and (min-width: $lg-width) {
+    padding-left: 0 !important;
+  }
+}
+
+.u-no-pad-r--md {
+  @media screen and (min-width: $md-width) {
+    padding-right: 0 !important;
+  }
+}
+
+.u-no-pad-l--md {
+  @media screen and (min-width: $md-width) {
+    padding-left: 0 !important;
+  }
+}
+
+.u-no-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.u-pad-1 {
+  padding: 1rem;
+}
+
+.u-margin-top-1 {
+  margin-top: 1rem;
+}
+
+.u-position-sticky {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+}
+
+.u-align-right {
+  width: 100%;
+  text-align: right;
+}
+
+.u-width-full {
+  width: 100%;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently */
+}
+
+.blue {
+  color: $color-new-blue;
+}
+
+.red {
+  color: $color-new-red;
+}
+
+.green {
+  color: $color-new-green;
+}
+
+.orange {
+  color: $color-new-orange;
+}
+
+.lighten {
+  color: $color-light-grey;
+}

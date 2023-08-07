@@ -1,0 +1,72 @@
+.table-two {
+  margin: 1rem 0;
+  justify-content: center;
+  overflow-x: scroll;
+  height: fit-content;
+
+  #search-bar-0 {
+    font-size: $overall-font-secondary;
+  }
+
+  .react-bootstrap-table-page-btns-ul {
+    font-size: $overall-font-secondary;
+  }
+
+  .react-bootstrap-table-pagination {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  &__loader {
+    padding: 1rem;
+    text-align: center;
+
+    &--text {
+      padding: 0.5rem;
+    }
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 0 1px;
+    border: solid $color-light-grey 1px;
+    border-radius: 6px;
+  }
+
+  thead {
+    background-color: $color-primary;
+    color: $color-white;
+    text-align: center;
+    // font-size: $table-one-font-primary;
+    font-size: 15px;
+
+    th {
+      border-bottom: none;
+    }
+  }
+
+  tbody {
+    background-color: $color-white;
+    color: $color-primary;
+    // font-size: $table-one-font-secondary;
+    font-size: 15px;
+    text-align: center;
+  }
+
+  tr,
+  td,
+  th {
+    padding: 1.2rem;
+    border: none;
+    width: 10rem;
+    outline: none;
+
+    button {
+      font-size: $table-one-font-secondary;
+    }
+  }
+
+  tr {
+    border-bottom: 1px solid $color-light-grey;
+  }
+}

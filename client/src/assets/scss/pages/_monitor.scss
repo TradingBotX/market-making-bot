@@ -1,0 +1,29 @@
+.monitor {
+  padding: 1rem;
+
+  .heap-status {
+    font-size: $overall-font-secondary;
+    font-weight: 500;
+  }
+
+  .bordered-form {
+    margin-left: 2rem;
+  }
+
+  table {
+    .profit {
+      background-color: lighten($color-new-green, 30%);
+      color: $color-primary;
+    }
+
+    .loss {
+      background-color: lighten($color-new-red, 30%);
+      color: $color-primary;
+    }
+
+    .neutral {
+      background-color: lighten($color-light-grey, 10%);
+      color: $color-primary;
+    }
+  }
+}

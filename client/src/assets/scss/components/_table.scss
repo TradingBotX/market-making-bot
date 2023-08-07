@@ -1,0 +1,120 @@
+.table-one {
+  // padding: 1rem;
+  justify-content: center;
+  width: 95%;
+  margin: 0 auto;
+  margin-top: 2rem;
+  height: fit-content;
+  overflow-x: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  .action-btn {
+    padding: 0.5rem;
+    margin: 0.5rem;
+  }
+
+  .table--footer {
+    padding: 1rem;
+    margin: 1rem;
+    padding-top: 0;
+    margin-top: 0;
+    font-size: $overall-font-secondary;
+
+    .footer-btn {
+      float: right;
+      font-size: $overall-font-secondary;
+    }
+
+    .note {
+      float: left;
+    }
+  }
+
+  #search-bar-0 {
+    font-size: $overall-font-secondary;
+  }
+
+  .react-bootstrap-table-page-btns-ul {
+    font-size: $overall-font-secondary;
+  }
+
+  .react-bootstrap-table-pagination {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  &__loader {
+    padding: 1rem;
+    text-align: center;
+
+    &--text {
+      padding: 0.5rem;
+    }
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 0 1px;
+    border: solid $color-light-grey 1px;
+    border-radius: 0px;
+  }
+
+  thead {
+    background-color: $color-primary;
+    color: $color-white;
+    font-size: $table-one-font-primary;
+
+    th {
+      border-bottom: none;
+    }
+  }
+
+  tbody {
+    background-color: $color-white;
+    color: $color-primary;
+    font-size: $table-one-font-secondary;
+  }
+
+  tr,
+  td,
+  th {
+    padding: 1rem;
+    border: none;
+    width: 10rem;
+    outline: none;
+
+    button {
+      font-size: $table-one-font-secondary;
+    }
+  }
+
+  tr {
+    border-bottom: 1px solid $color-light-grey;
+  }
+}
+
+.static-table {
+  th,
+  tr,
+  td,
+  table,
+  thead,
+  tbody {
+    border: none !important;
+    font-size: 15px;
+  }
+
+  thead {
+    border-bottom: 1px solid $color-primary !important;
+  }
+}
+
+.table-width {
+  td,
+  th {
+    width: 16rem;
+  }
+}

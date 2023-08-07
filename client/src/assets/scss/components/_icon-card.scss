@@ -1,0 +1,28 @@
+.icon-card {
+  padding: 1rem;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  height: 8rem;
+
+  &__icon {
+    padding-left: 2.5rem;
+    text-align: center;
+  }
+
+  &__body {
+    padding-left: 1rem;
+    width: 100%;
+    &--title {
+      font-size: $overall-font-primary;
+      font-weight: 500;
+    }
+    &--text {
+      font-size: $overall-font-secondary;
+      padding: 0.5rem;
+    }
+  }
+
+  @media screen and (max-width: 987px) {
+    margin-bottom: 1rem;
+  }
+}

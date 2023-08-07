@@ -1,0 +1,86 @@
+.main-panel {
+  padding: 1rem;
+  // width: 100%;
+  background-color: $color-background-primary;
+  // min-height: 100vh;
+  padding-top: $header-height;
+  padding-left: $sidebar-width;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .banner-wrapper {
+    .container {
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
+
+      .banner-left,
+      .banner-right {
+        background-color: $color-white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+
+        @media screen and (min-width: $md-width) {
+          height: 56rem;
+        }
+      }
+
+      .banner-left {
+        a,
+        .btn-sign-up {
+          color: $color-new-blue;
+          font-weight: 600;
+        }
+      }
+
+      .banner-right {
+        &__tuple {
+          margin: 0.5rem;
+          &--title {
+            font-size: 2.5rem;
+            font-weight: 500;
+          }
+
+          &--content {
+            margin: 0.5rem;
+            font-size: 1.8rem;
+          }
+        }
+        margin-left: 0;
+      }
+    }
+
+    .funding-benefits {
+      margin: 1.5rem;
+      padding: 1rem;
+      background-color: white;
+      border-radius: 0.5rem;
+
+      &__title {
+        color: $color-primary;
+        font-size: 3rem;
+        font-weight: 500;
+        text-align: center;
+      }
+
+      &__content {
+        &--card {
+          margin: 1rem;
+          padding: 1rem;
+          font-size: $overall-font-secondary;
+        }
+
+        &--img {
+          img {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 580px) {
+    padding-top: $header-height;
+  }
+}

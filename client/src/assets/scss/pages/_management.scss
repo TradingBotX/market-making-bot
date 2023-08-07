@@ -1,0 +1,10 @@
+.management {
+  .section-title {
+    font-size: $overall-font-primary;
+    font-weight: 500;
+    text-align: center;
+    color: $color-primary;
+    margin: 1rem;
+    border-bottom: 1px solid $color-primary-lighter;
+  }
+}

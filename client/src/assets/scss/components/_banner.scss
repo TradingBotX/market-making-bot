@@ -1,0 +1,30 @@
+.banner {
+  &__title {
+    text-align: center;
+    color: $color-primary;
+  }
+
+  &__hero {
+    text-align: center;
+    img {
+      width: 100%;
+    }
+  }
+
+  &__content {
+    padding: 0.5rem;
+    text-align: center;
+    color: $color-primary;
+
+    ul {
+      li {
+        margin: 1rem 0 1rem 0;
+      }
+    }
+  }
+  
+  &__footer {
+    padding: 2rem;
+    color: $color-primary;
+  }
+}
