@@ -8,12 +8,12 @@
 
 We are excited to announce that TradingBotX now supports the following exchanges:
 
-- ![Bitrue Logo](https://example.com/bitrue_logo.png) Bitrue
-- ![KuCoin Logo](https://example.com/kucoin_logo.png) KuCoin
-- ![Bitfinex Logo](https://example.com/bitfinex_logo.png) Bitfinex
-- ![Bittrex Logo](https://example.com/bittrex_logo.png) Bittrex
-- ![Gate.io Logo](https://example.com/gateio_logo.png) Gate.io
-- ![Huobi Logo](https://example.com/huobi_logo.png) Huobi
+- ![Bitrue Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/bitrue.png) Bitrue
+- ![KuCoin Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/kucoin.png) KuCoin
+- ![Bitfinex Logo]https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/bitfinex.png) Bitfinex
+- ![Bittrex Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/bittrex.png) Bittrex
+- ![Gate.io Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/gateio.png) Gate.io
+- ![Huobi Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/huobi.png) Huobi
 
 We apologize for any inconvenience caused by our earlier decision to temporarily exclude Binance and Coinbase exchanges from our platform. We deeply appreciate your patience and understanding during this period.
 
