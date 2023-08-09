@@ -8,12 +8,12 @@
 
 We are excited to announce that TradingBotX now supports the following exchanges:
 
-- ![Bitrue Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/bitrue.png) Bitrue
-- ![KuCoin Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/kucoin.png) KuCoin
-- ![Bitfinex Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/bitfinex.png) Bitfinex
-- ![Bittrex Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/bittrex.png) Bittrex
-- ![Gate.io Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/gateio.png) Gate.io
-- ![Huobi Logo](https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/huobi.png) Huobi
+- <img src="https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/bitrue.png" width="24" height="24" alt="Bitrue"> Bitrue
+- <img src="https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/kucoin.png" width="24" height="24" alt="Kucoin"> KuCoin
+- <img src="https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/bitfinex.png" width="24" height="24" alt="Bitfinex"> Bitfinex
+- <img src="https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/bittrex.png" width="24" height="24" alt="Bittrex"> Bittrex
+- <img src="https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/gateio.png" width="24" height="24" alt="Gateio"> Gate.io
+- <img src="https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/Huobi.png" width="24" height="24" alt="Huobi"> Huobi
 
 We apologize for any inconvenience caused by our earlier decision to temporarily exclude Binance and Coinbase exchanges from our platform. We deeply appreciate your patience and understanding during this period.
 
