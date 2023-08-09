@@ -1,24 +1,35 @@
-# market-making-bot
+# Market-Making-Bot
 
+<p align="center">
+  <img src="path_to_your_logo_image.png" alt="TradingBotX Logo">
+</p>
 
+## Updated Exchange Support and Important Notice
 
-## Important Notice: Temporary Exclusion of Binance and Coinbase Exchanges
+We are excited to announce that TradingBotX now supports the following exchanges:
 
-We regret to inform our users that as of now, we are unable to offer support for trading on the Binance and Coinbase exchanges. We understand the inconvenience this might cause and sincerely apologize for any disruption this decision may have caused.
+- ![Bitrue Logo](https://example.com/bitrue_logo.png) Bitrue
+- ![KuCoin Logo](https://example.com/kucoin_logo.png) KuCoin
+- ![Bitfinex Logo](https://example.com/bitfinex_logo.png) Bitfinex
+- ![Bittrex Logo](https://example.com/bittrex_logo.png) Bittrex
+- ![Gate.io Logo](https://example.com/gateio_logo.png) Gate.io
+- ![Huobi Logo](https://example.com/huobi_logo.png) Huobi
 
-## Reasons for the Decision
+We apologize for any inconvenience caused by our earlier decision to temporarily exclude Binance and Coinbase exchanges from our platform. We deeply appreciate your patience and understanding during this period.
 
-This decision is influenced by several factors. Notably, both Binance and Coinbase have faced increased regulatory scrutiny in recent months, resulting in complications during the integration process with our platform.
+## Reasons for Temporary Exclusion
 
-## Our Commitment
+The temporary exclusion of Binance and Coinbase exchanges from our supported list is due to several factors, with one of the main considerations being the increased regulatory scrutiny both exchanges have faced in recent months. This regulatory environment has posed challenges in effectively integrating with these platforms.
 
-We want to emphasize our unwavering commitment to delivering a seamless trading experience. While we deeply regret this temporary limitation, our team is actively working to reinstate support for Binance and Coinbase exchanges in the foreseeable future. However, please note that we are unable to provide a specific timeline for the restoration of services on these platforms.
+## Our Forward Outlook
 
-## Your Understanding Matters
+We want to assure our users that we remain committed to providing a seamless trading experience. While we are actively working to restore support for Binance and Coinbase exchanges, we are unable to provide a specific timeline for the reintegration of these platforms.
 
-We greatly appreciate your understanding during this transitional phase. Our team is dedicated to exploring every avenue to enhance our services and reestablish complete access to the exchanges that our users rely on. We will ensure prompt updates as we make progress in this endeavor.
+## Your Ongoing Support
 
-Thank you for your continued support and patience.
+Your understanding and support have been invaluable to us as we navigate through this period of adjustment. We are dedicated to exploring all possibilities to enhance our services and reintroduce complete access to all exchanges. Timely updates will be shared as we make progress in this endeavor.
+
+Thank you for being part of the TradingBotX community.
 
 Best regards,  
 Team TradingBotX
@@ -29,6 +40,6 @@ Team TradingBotX
 
 Since TradingBotX is an open-source project, we welcome contributions from the developer community to enhance exchange integration support. If you're interested in adding support for a new exchange, here's the process:
 
-### Step : [Comming Soon]
+### Step : [Coming Soon]
 
 We believe that together, we can expand the capabilities of TradingBotX and create a more comprehensive trading experience for all users.
