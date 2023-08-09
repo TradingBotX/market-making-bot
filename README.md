@@ -1,7 +1,7 @@
 # Market-Making-Bot
 
 <p align="center">
-  <img src="path_to_your_logo_image.png" alt="TradingBotX Logo">
+  <img src="https://avatars.githubusercontent.com/u/141486012?s=200&v=4" alt="TradingBotX Logo">
 </p>
 
 ## Updated Exchange Support and Important Notice
