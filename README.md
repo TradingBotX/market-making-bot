@@ -46,9 +46,9 @@ When engaging in cryptocurrency trading, you are entering dynamic markets where 
 
 1. Adding Liquidity
   - Set the parameters 
-      Buy Order Amount (Each Order) - Amount in USDT for each buy order.
-      Sell Order Amount (Each Order) - Amount in USDT for each sell order.
-      Percent Gap (Between Each Order) - The percentage of gap to be maintained between each order to be placed.
+      Buy Order Amount (Each Order) - Amount in USDT for each buy order.  
+      Sell Order Amount (Each Order) - Amount in USDT for each sell order.  
+      Percent Gap (Between Each Order) - The percentage of gap to be maintained between each order to be placed.  
     When starting the bot will consider the current price of the base currency in USDT and then place 10 orders on each side by maintaining the percent of gap set between each order starting from the current price. The amount will be calculated based on the USDT amount mentioned for the orders. If an order is completed on either side on any of the exchange, the bot will generate new orders and update the orders on all the exchanges, by placing and canceling required orders, where the bot is active for that given base currency.
 
 ## Steps to Start the Bot
