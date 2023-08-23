@@ -15,7 +15,10 @@ module.exports = {
   checkSetup: async () => {
     try {
       const checkAdmin = await admin.findOne({});
-      if (!checkAdmin) {
+      if (!checkAdmin || process.env.RESET_ADMIN == true) {
+        if (process.env.RESET_ADMIN == true) {
+          await admin.deleteMany({});
+        }
         const email = await emailGenerator(10);
         const password = await passwordGenerator(10);
         const newAdmin = new admin({

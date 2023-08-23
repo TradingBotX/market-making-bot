@@ -88,7 +88,7 @@ class Sidebar extends React.Component {
             }
           )}
 
-          {this.renderRouteButton("Manage Key", faKey, "/manage-keys", () =>
+          {this.renderRouteButton("Manage Keys", faKey, "/manage-keys", () =>
             this.setState({ activeLink: "/manage-keys" })
           )}
 
