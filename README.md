@@ -54,8 +54,6 @@ When engaging in cryptocurrency trading, you are entering dynamic markets where 
 
 ## Steps to Start the Bot
 
-1. Clone the repo and install the application using either of the 2 methods
-
 ### Method 1 : Docker Setup
 
 Follow these steps to get the project up and running:
@@ -84,11 +82,18 @@ Follow these steps to get the project up and running:
     docker-compose down
     ```
 
-### Method 2 : 
+### Method 2 : Manual Setup
 
-Requirements : [https://nodejs.org/en/blog/release/v16.16.0](node v16), [https://www.mongodb.com/try/download/community](mongodb), [https://redis.io/download/#redis-downloads](redis)
+Requirements : [node v16](https://nodejs.org/en/blog/release/v16.16.0), [mongodb](https://www.mongodb.com/try/download/community), [redis](https://redis.io/download/#redis-downloads)
 
-2. Install the dependencies
+1. Clone this repository:
+
+    ```bash
+    git clone https://github.com/tradingbotx/market-making-bot
+    cd market-making-bot
+    ```
+
+2. Install the dependencies for both client and server using `npm install` in the respective folders.
 
 3. After installing the dependencies, update the `.env` files in client and server folder, for reference use the `.env.example` files.
 
@@ -96,7 +101,7 @@ Requirements : [https://nodejs.org/en/blog/release/v16.16.0](node v16), [https:/
 
 5. Start the client using `npm start`.
 
-After successfully installing the dependencies and starting the applications, follow the below steps to start the bot and add liquidity. Once the server starts an email and password created for you will be displayed in the command prompt, save this for logging in via the client. To reset the user, update the RESET_ADMIN variable in the .env of the server to create a new user for you.
+After successfully installing the dependencies and starting the applications, follow the below steps to start the bot and add liquidity. Once the server starts an email and password created for you will be displayed in the command prompt, save this for logging in via the client. To reset the user, update the `RESET_ADMIN` variable in the `.env` of the server to create a new user for you.
 
 1. Login to the client.
 
