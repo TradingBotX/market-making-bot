@@ -56,7 +56,34 @@ When engaging in cryptocurrency trading, you are entering dynamic markets where 
 
 1. Clone the repo and install the application using either of the 2 methods
 
-### Method 1 : Docker [Coming Soon]
+### Method 1 : Docker Setup
+
+
+Follow these steps to get the project up and running:
+
+1. Clone this repository:
+
+    ```bash
+    git clone https://github.com/tradingbotx/market-making-bot
+    cd market-making-bot
+    ```
+
+2. Navigate to the directory containing the `docker-compose.yml` file.
+
+3. Start the services:
+
+    ```bash
+    docker-compose build
+    docker-compose up
+    ```
+
+4. Access the React app at [http://localhost:3000](http://localhost:3000) and the Node.js app at [http://localhost:5000](http://localhost:5000).
+
+5. To stop the services, press `Ctrl + C` in the terminal where you started the services, and then remove the containers:
+
+    ```bash
+    docker-compose down
+    ```
 
 ### Method 2 : 
 
