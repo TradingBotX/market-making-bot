@@ -45,19 +45,18 @@ When engaging in cryptocurrency trading, you are entering dynamic markets where 
 ## Strategies implemented
 
 1. Adding Liquidity
-  - Set the parameters 
-      Buy Order Amount (Each Order) - Amount in USDT for each buy order.  
-      Sell Order Amount (Each Order) - Amount in USDT for each sell order.  
-      Percent Gap (Between Each Order) - The percentage of gap to be maintained between each order to be placed. 
+  Set the parameters  
+    - Buy Order Amount (Each Order) - Amount in USDT for each buy order.  
+    - Sell Order Amount (Each Order) - Amount in USDT for each sell order.  
+    - Percent Gap (Between Each Order) - The percentage of gap to be maintained between each order to be placed. 
        
-    When starting the bot will consider the current price of the base currency in USDT and then place 10 orders on each side by maintaining the percent of gap set between each order starting from the current price. The amount will be calculated based on the USDT amount mentioned for the orders. If an order is completed on either side on any of the exchange, the bot will generate new orders and update the orders on all the exchanges, by placing and canceling required orders, where the bot is active for that given base currency.
+  When starting the bot will consider the current price of the base currency in USDT and then place 10 orders on each side by maintaining the percent of gap set between each order starting from the current price. The amount will be calculated based on the USDT amount mentioned for the orders. If an order is completed on either side on any of the exchange, the bot will generate new orders and update the orders on all the exchanges, by placing and canceling required orders, where the bot is active for that given base currency.
 
 ## Steps to Start the Bot
 
 1. Clone the repo and install the application using either of the 2 methods
 
 ### Method 1 : Docker Setup
-
 
 Follow these steps to get the project up and running:
 
@@ -87,23 +86,23 @@ Follow these steps to get the project up and running:
 
 ### Method 2 : 
 
-Requirements : node v16, mongodb, redis
+Requirements : [https://nodejs.org/en/blog/release/v16.16.0](node v16), [https://www.mongodb.com/try/download/community](mongodb), [https://redis.io/download/#redis-downloads](redis)
 
 2. Install the dependencies
 
-3. After installing the dependencies, update the .env files in client and server folder, for reference use the .env.example files.
+3. After installing the dependencies, update the `.env` files in client and server folder, for reference use the `.env.example` files.
 
-4. Start the server using npm run dev to start the the application using nodemon.
+4. Start the server using `npm run dev` to start the the application using `nodemon`.
 
-5. Start the client using npm start.
+5. Start the client using `npm start`.
 
 After successfully installing the dependencies and starting the applications, follow the below steps to start the bot and add liquidity. Once the server starts an email and password created for you will be displayed in the command prompt, save this for logging in via the client. To reset the user, update the RESET_ADMIN variable in the .env of the server to create a new user for you.
 
 1. Login to the client.
 
-2. Navigate to 'Manage Keys' section and add api keys for the exchanges that you want to connect.
+2. Navigate to `Manage Keys` section and add api keys for the exchanges that you want to connect.
 
-3. Navigate to 'Add Liquidity' section and from the options select exchange, pair and fill out the required parameters to add liquidity to your desired exchange and pair.
+3. Navigate to `Add Liquidity` section and from the options select exchange, pair and fill out the required parameters to add liquidity to your desired exchange and pair.
 
 ## Contributing to TradingBotX
 
