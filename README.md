@@ -84,32 +84,59 @@ Follow these steps to get the project up and running:
 
 ### Method 2 : Manual Setup
 
-Requirements : [node v16](https://nodejs.org/en/blog/release/v16.16.0), [mongodb](https://www.mongodb.com/try/download/community), [redis](https://redis.io/download/#redis-downloads)
+Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoDB](https://www.mongodb.com/try/download/community), [Redis](https://redis.io/download/#redis-downloads), [Python 2.7](https://www.python.org/download/releases/2.7/)
 
-1. Clone this repository:
+1. **Clone the Repository:**  
+    Open your terminal and execute the following commands:  
 
     ```bash
     git clone https://github.com/tradingbotx/market-making-bot
     cd market-making-bot
     ```
 
-2. Install the dependencies for both client and server using `npm install` in the respective folders.
+2. **Install Dependencies:**  
+    Inside the cloned repository, you'll find both a client and a server folder. Install the required dependencies for both by running the following commands in their respective folders:  
 
-3. After installing the dependencies, update the `.env` files in client and server folder, for reference use the `.env.example` files.
+    ```bash
+    cd client
+    npm install --legacy-peer-deps
 
-4. Start the server using `npm run dev` to start the the application using `nodemon`.
+    cd ../server
+    npm install
+    ```
 
-5. Start the client using `npm start`.  
+3. **Configure Environment Variables:**  
+    Update the `.env` files located in the client and server folders. You can use the provided `.env.example` files as references. Fill in the necessary values for your environment.  
 
-6. Access the client at [http://localhost:3000](http://localhost:3000) and the server at [http://localhost:5000](http://localhost:5000).
+4. **Start the Server:**  
+    Launch the server using the following command to start the application with nodemon:  
+  
+    ```bash
+    npm run dev
+    ```  
+     
+    Upon starting the server for the first time, you will encounter an email and password generated for you in the command prompt. It is imperative to securely store this information, as it will be essential for your login via the client interface. Should the need arise to reset the user, simply modify the `RESET_ADMIN` variable within the server's `.env` file.  
 
-After successfully installing the dependencies and starting the applications using either of the 2 methods, follow the below steps to start the bot and add liquidity. Once the server starts an email and password created for you will be displayed in the command prompt, save this for logging in via the client. To reset the user, update the `RESET_ADMIN` variable in the `.env` of the server to create a new user for you.
+5. **Start the Client:**  
+    Initiate the client using: 
 
-1. Login to the client.
+    ```bash
+    npm start
+    ``` 
 
-2. Navigate to `Manage Keys` section and add api keys for the exchanges that you want to connect.
+ ### Access the client and server to access the bot:  
+    Access the client by navigating to [http://localhost:3000](http://localhost:3000) and the server at [http://localhost:5000](http://localhost:5000).   
 
-3. Navigate to `Add Liquidity` section and from the options select exchange, pair and fill out the required parameters to add liquidity to your desired exchange and pair.
+1. **Log in to the Client:**  
+    Using the credentials displayed during server startup, log in to the client interface.  
+
+2. **Manage API Keys:**  
+    Within the client screen, navigate to the `Manage Keys` section. Here, you can add and update the necessary API keys for the exchanges you intend to connect to.  
+
+3. **Add Liquidity:**  
+    Proceed to the `Add Liquidity` section. Select the exchange and trading pair you're interested in. Provide the required parameters to add liquidity to the chosen exchange and pair.  
+
+  By meticulously following these steps, you'll have successfully installed dependencies, started the applications, logged in, and added liquidity using the trading bot. If needed, you can refer back to this guide for guidance.  
 
 ## Contributing to TradingBotX
 
