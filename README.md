@@ -99,9 +99,11 @@ Requirements : [node v16](https://nodejs.org/en/blog/release/v16.16.0), [mongodb
 
 4. Start the server using `npm run dev` to start the the application using `nodemon`.
 
-5. Start the client using `npm start`.
+5. Start the client using `npm start`.  
 
-After successfully installing the dependencies and starting the applications, follow the below steps to start the bot and add liquidity. Once the server starts an email and password created for you will be displayed in the command prompt, save this for logging in via the client. To reset the user, update the `RESET_ADMIN` variable in the `.env` of the server to create a new user for you.
+6. Access the client at [http://localhost:3000](http://localhost:3000) and the server at [http://localhost:5000](http://localhost:5000).
+
+After successfully installing the dependencies and starting the applications using either of the 2 methods, follow the below steps to start the bot and add liquidity. Once the server starts an email and password created for you will be displayed in the command prompt, save this for logging in via the client. To reset the user, update the `RESET_ADMIN` variable in the `.env` of the server to create a new user for you.
 
 1. Login to the client.
 
