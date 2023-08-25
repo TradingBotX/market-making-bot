@@ -112,7 +112,7 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
     Launch the server using the following command to start the application with nodemon:  
   
     ```bash
-    npm run dev
+    npm start
     ```  
      
     Upon starting the server for the first time, you will encounter an email and password generated for you in the command prompt. It is imperative to securely store this information, as it will be essential for your login via the client interface. Should the need arise to reset the user, simply modify the `RESET_ADMIN` variable within the server's `.env` file.  
@@ -124,9 +124,9 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
     npm start
     ``` 
 
- ### Access the client and server to access the bot:   
-  
-    Access the client by navigating to [http://localhost:3000](http://localhost:3000) and the server at [http://localhost:5000](http://localhost:5000).   
+### Access the client and server to access the bot:   
+
+  Access the client by navigating to [http://localhost:3000/](http://localhost:3000) and the server at [http://localhost:5000/](http://localhost:5000).   
 
 1. **Log in to the Client:**  
     Using the credentials displayed during server startup, log in to the client interface.  
