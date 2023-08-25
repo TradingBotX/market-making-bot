@@ -124,7 +124,8 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
     npm start
     ``` 
 
- ### Access the client and server to access the bot:    
+ ### Access the client and server to access the bot:   
+  
     Access the client by navigating to [http://localhost:3000](http://localhost:3000) and the server at [http://localhost:5000](http://localhost:5000).   
 
 1. **Log in to the Client:**  
