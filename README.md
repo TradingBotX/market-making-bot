@@ -145,7 +145,7 @@ We firmly believe that collaboration can empower TradingBotX to enhance its capa
 
 Given that TradingBotX operates as an open-source project, we enthusiastically welcome contributions from the developer community to augment exchange integration support. If you're enthusiastic about introducing support for a new exchange, here's the process:
 
-## Steps :  
+### Steps :  
 
 1. **Create Exchange Helper File:**    
     Inside the `/server/helpers/exchangeHelpers` folder, generate a new file named after the exchange (e.g., `NewExchange.js`). In this file, add the required functions like `orderBook`, `placeOrder`, `orderStatus`, `cancelOrder`, `walletBalance`, and `ticker24Hr`.   
