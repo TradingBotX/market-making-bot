@@ -18,7 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import ReactTooltip from "react-tooltip";
 
-import LineChart from "./Charts/LineChart";
+// import LineChart from "./Charts/LineChart";
 // import ResistanceCard from "./ResistanceCard";
 
 import Management from "../containers/Management";
@@ -39,7 +39,7 @@ class App extends React.Component {
           <Route exact path="/" component={Dashboard} />
           <Route exact path="/signup" component={SignUp} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/chart" component={LineChart} />
+          {/* <Route exact path="/chart" component={LineChart} /> */}
           <Route exact path="/monitor" component={Monitor} />
           <Route exact path="/management" component={Management} />
           <Route exact path="/admin-management" component={AdminManagement} />

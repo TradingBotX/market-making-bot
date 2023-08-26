@@ -20,7 +20,7 @@ import {
   GenericAccounts,
 } from "../helpers/constant";
 
-import LineChart from "../components/Charts/LineChart";
+// import LineChart from "../components/Charts/LineChart";
 import Wallet from "../components/Wallet";
 import { initial } from "lodash";
 import DataTable from "../components/DataTable";
@@ -200,7 +200,7 @@ class Monitor extends React.Component {
     return (
       <div className="monitor main-panel">
         <Row>
-          <Col lg={6} md={6} sm={12} xs={12}>
+          {/* <Col lg={6} md={6} sm={12} xs={12}>
             <Card className="simple-card">
               <div className="simple-card--header">Heap Used</div>
               <LineChart
@@ -214,7 +214,7 @@ class Monitor extends React.Component {
                 }}
               />
             </Card>
-          </Col>
+          </Col> */}
           <Col lg={6} md={6} sm={12} xs={12}>
             <Card className="simple-card">
               <div className="simple-card--header">
