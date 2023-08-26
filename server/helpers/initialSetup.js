@@ -10,13 +10,14 @@ const {
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const logSymbols = require("log-symbols");
 
 module.exports = {
   checkSetup: async () => {
     try {
       const checkAdmin = await admin.findOne({});
-      if (!checkAdmin || process.env.RESET_ADMIN == true) {
-        if (process.env.RESET_ADMIN == true) {
+      if (!checkAdmin || process.env.RESET_ADMIN) {
+        if (process.env.RESET_ADMIN) {
           await admin.deleteMany({});
         }
         const email = await emailGenerator(10);
@@ -30,10 +31,15 @@ module.exports = {
         newAdmin.password = newAdmin.generateHash(password);
         await newAdmin.save();
         console.log(
-          "Please use the following email and password to login, it won't be displayed again",
+          "[",
+          logSymbols.warning,
+          "]",
+          "Please use the following email and password to login, the same are saved in server/helpers/creds.json file :",
           email,
           password
         );
+        let jsonCreds = JSON.stringify({ email: email, password: password });
+        fs.writeFileSync(path.resolve(__dirname, "creds.json"), jsonCreds);
       }
       let data = fs.readFileSync(path.resolve(__dirname, "data.json"), "UTF-8");
       let secret = JSON.parse(data).secret;

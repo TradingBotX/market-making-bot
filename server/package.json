@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon --max-old-space-size=1024 -r dotenv/config ./bin/www",
-    "start": "nodemon --max-old-space-size=1024 -r dotenv/config ./bin/www",
+    "dev": "nodemon --max-old-space-size=1024 -r dotenv/config ./bin/www --ignore ./helpers/creds.json",
+    "start": "nodemon --max-old-space-size=1024 -r dotenv/config ./bin/www  --ignore ./helpers/creds.json",
     "start-pm2": "pm2 start ./bin/www --name Server --node-args='--max-old-space-size=1024' --time"
   },
   "dependencies": {

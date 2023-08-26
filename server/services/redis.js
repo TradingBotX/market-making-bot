@@ -538,61 +538,7 @@ function parseOrderbook(exchange, book) {
           ask: book.ask.slice(0, 2),
         };
       }
-      case "stex": {
-        return {
-          bid: [book.bid.price, book.bid.amount],
-          ask: [book.ask.price, book.ask.amount],
-        };
-      }
-      case "bw": {
-        return {
-          bid: [parseFloat(book.bid[0]), parseFloat(book.bid[1])],
-          ask: [parseFloat(book.ask[0]), parseFloat(book.ask[1])],
-        };
-      }
-      case "digifinex": {
-        return {
-          bid: [parseFloat(book.bid[0]), parseFloat(book.bid[1])],
-          ask: [parseFloat(book.ask[0]), parseFloat(book.ask[1])],
-        };
-      }
-      case "wbf": {
-        return {
-          bid: [parseFloat(book.bid[0]), parseFloat(book.bid[1])],
-          ask: [parseFloat(book.ask[0]), parseFloat(book.ask[1])],
-        };
-      }
-      case "p2pb2b": {
-        return {
-          bid: [parseFloat(book.bid[0]), parseFloat(book.bid[1])],
-          ask: [parseFloat(book.ask[0]), parseFloat(book.ask[1])],
-        };
-      }
-      case "latoken": {
-        return {
-          bid: [parseFloat(book.bid.price), parseFloat(book.bid.quantity)],
-          ask: [parseFloat(book.ask.price), parseFloat(book.ask.quantity)],
-        };
-      }
       case "bitfinex": {
-        return {
-          bid: [parseFloat(book.bid.price), parseFloat(book.bid.amount)],
-          ask: [parseFloat(book.ask.price), parseFloat(book.ask.amount)],
-        };
-      }
-      case "liquid": {
-        return {
-          bid: [parseFloat(book.bid[0]), parseFloat(book.bid[1])],
-          ask: [parseFloat(book.ask[0]), parseFloat(book.ask[1])],
-        };
-      }
-      case "indodax": {
-        return {
-          bid: [parseFloat(book.bid[0]), parseFloat(book.bid[1])],
-          ask: [parseFloat(book.ask[0]), parseFloat(book.ask[1])],
-        };
-      }
-      case "probit": {
         return {
           bid: [parseFloat(book.bid.price), parseFloat(book.bid.amount)],
           ask: [parseFloat(book.ask.price), parseFloat(book.ask.amount)],
@@ -610,25 +556,7 @@ function parseOrderbook(exchange, book) {
           ask: [parseFloat(book.ask.rate), parseFloat(book.ask.quantity)],
         };
       }
-      case "globiance": {
-        return {
-          bid: [parseFloat(book.bid.price), parseFloat(book.bid.amount)],
-          ask: [parseFloat(book.ask.price), parseFloat(book.ask.amount)],
-        };
-      }
       case "gateio": {
-        return {
-          bid: [parseFloat(book.bid[0]), parseFloat(book.bid[1])],
-          ask: [parseFloat(book.ask[0]), parseFloat(book.ask[1])],
-        };
-      }
-      case "bitmart": {
-        return {
-          bid: [parseFloat(book.bid.price), parseFloat(book.bid.amount)],
-          ask: [parseFloat(book.ask.price), parseFloat(book.ask.amount)],
-        };
-      }
-      case "hitbtc": {
         return {
           bid: [parseFloat(book.bid[0]), parseFloat(book.bid[1])],
           ask: [parseFloat(book.ask[0]), parseFloat(book.ask[1])],
@@ -668,115 +596,7 @@ function parseCompleteOrderBook(exchange, book) {
           ask: askArray,
         };
       }
-      case "stex": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i].price, book.bid[i].amount]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i].price, book.ask[i].amount]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "bw": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i][0], book.bid[i][1]]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i][0], book.ask[i][1]]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "digifinex": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i][0], book.bid[i][1]]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i][0], book.ask[i][1]]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "wbf": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i][0], book.bid[i][1]]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i][0], book.ask[i][1]]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "p2pb2b": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i][0], book.bid[i][1]]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i][0], book.ask[i][1]]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "latoken": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i].price, book.bid[i].quantity]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i].price, book.ask[i].quantity]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
       case "bitfinex": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i].price, book.bid[i].amount]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i].price, book.ask[i].amount]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "liquid": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i][0], book.bid[i][1]]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i][0], book.ask[i][1]]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "indodax": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i][0], book.bid[i][1]]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i][0], book.ask[i][1]]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "probit": {
         for (i = 0; i < book.bid.length && i < 10; i++) {
           bidArray.push([book.bid[i].price, book.bid[i].amount]);
         }
@@ -812,43 +632,7 @@ function parseCompleteOrderBook(exchange, book) {
           ask: askArray,
         };
       }
-      case "globiance": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i].price, book.bid[i].amount]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i].price, book.ask[i].amount]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
       case "gateio": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i][0], book.bid[i][1]]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i][0], book.ask[i][1]]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "bitmart": {
-        for (i = 0; i < book.bid.length && i < 10; i++) {
-          bidArray.push([book.bid[i].price, book.bid[i].amount]);
-        }
-        for (i = 0; i < book.ask.length && i < 10; i++) {
-          askArray.push([book.ask[i].price, book.ask[i].amount]);
-        }
-        return {
-          bid: bidArray,
-          ask: askArray,
-        };
-      }
-      case "hitbtc": {
         for (i = 0; i < book.bid.length && i < 10; i++) {
           bidArray.push([book.bid[i][0], book.bid[i][1]]);
         }

@@ -907,9 +907,9 @@ exports.LastTradedPrice = async (exchange, pair) => {
       case "huobi":
         tickerData = await huobi.ticker24Hr(pair);
         return tickerData.tick.close;
-      case "bitmart":
-        tickerData = await bitmart.ticker24Hr(pair);
-        return tickerData.data.last_price;
+      case "gateio":
+        tickerData = await gateio.ticker24Hr(pair);
+        return tickerData.last;
       default:
         return 0;
     }

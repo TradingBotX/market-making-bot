@@ -114,8 +114,6 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
     ```bash
     npm start
     ```  
-     
-    Upon starting the server for the first time, you will encounter an email and password generated for you in the command prompt. It is imperative to securely store this information, as it will be essential for your login via the client interface. Should the need arise to reset the user, simply modify the `RESET_ADMIN` variable within the server's `.env` file.  
 
 5. **Start the Client:**  
     Initiate the client using: 
@@ -124,7 +122,9 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
     npm start
     ``` 
 
-### Access the client and server to access the bot:   
+### Access the client and server to access the bot:  
+
+  Upon initializing the server for the first time, an email and password will be generated for you. This information will be displayed in the command prompt and saved in the `/server/helpers/creds.json` file. We strongly advise you to empty the file after copying the credentials to ensure security. Safely storing this information is of utmost importance, as it will be essential for your future login via the client interface. If the need arises to reset the user, you can achieve this by modifying the `RESET_ADMIN` variable in the server's `.env` file to true. Once the necessary changes are made, remember to set the variable back to false.  
 
   Access the client by navigating to [http://localhost:3000/](http://localhost:3000) and the server at [http://localhost:5000/](http://localhost:5000).   
 
@@ -141,8 +141,26 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
 
 ## Contributing to TradingBotX
 
-Since TradingBotX is an open-source project, we welcome contributions from the developer community to enhance exchange integration support. If you're interested in adding support for a new exchange, here's the process:
+We firmly believe that collaboration can empower TradingBotX to enhance its capabilities and provide a more comprehensive trading experience for all users. With this in mind, we kindly ask you to adhere to the established standards consistently applied to other exchanges. By examining the files and functions that detail the integration of existing exchanges within the bot, you can become acquainted with these standards. This approach ensures a unified and seamless integration process throughout the platform. Your dedication to these guidelines will significantly contribute to a cohesive trading environment that benefits our entire user community.
 
-## Step : [Coming Soon]
+Given that TradingBotX operates as an open-source project, we enthusiastically welcome contributions from the developer community to augment exchange integration support. If you're enthusiastic about introducing support for a new exchange, here's the process:
 
-We believe that together, we can expand the capabilities of TradingBotX and create a more comprehensive trading experience for all users.
+## Steps :  
+
+1. **Create Exchange Helper File:**    
+    Inside the `/server/helpers/exchangeHelpers` folder, generate a new file named after the exchange (e.g., `NewExchange.js`). In this file, add the required functions like `orderBook`, `placeOrder`, `orderStatus`, `cancelOrder`, `walletBalance`, and `ticker24Hr`.   
+
+2. **Implement Exchange Functions in orderPlacement.js:**  
+    Inside the `/server/helpers/orderPlacement.js` file, add the required functions with switch cases for the new exchange. Ensure that the functions adhere to the required formats and standards for interacting with the exchange.  
+
+3. **Enhance redis.js for Order Book Parsing:**  
+    Within the `/server/services/redis.js` file, navigate to the `parseOrderBook` and `parseCompleteOrderBook` functions. Integrate switch cases for the new exchange to ensure proper parsing of order book data with the required formats.  
+
+4. **Update constant.js for Exchange Information:**  
+    In the `/server/helpers/constant.js` file, under the exchanges array, add the name of the new exchange. Additionally, in the `ExchangePairInfo` and `ExchangeCurrencyInfo` variables, include the default trading pairs and currencies you wish to incorporate for the new exchange. If needed, you can also make similar changes for existing exchanges to update their default pairs and currencies.  
+
+5. **Testing and Pull Request:**  
+    Once you have made all the required changes, thoroughly test the integration to ensure its functionality and compatibility. After successful testing, create a pull request (PR) with your changes. The team will carefully review the modifications, and upon approval, your changes will be merged into the codebase.
+
+    By following these steps, you will effectively integrate support for the new exchange within the TradingBotX ecosystem, while maintaining consistency and adhering to the existing standards of the project.
+
