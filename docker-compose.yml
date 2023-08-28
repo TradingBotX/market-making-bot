@@ -27,6 +27,8 @@ services:
       - "3000:3000"
     depends_on:
       - nodejs-app
+    volumes:
+      - ./client:/app
     environment:
       - NODE_ENV=development
 
