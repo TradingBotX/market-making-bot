@@ -21,19 +21,19 @@ We are excited to announce that TradingBotX now supports the following exchanges
 - <img src="https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/gateio.png" width="15" height="15" alt="Gateio"> [Gate.io](https://www.gate.io/)  
 - <img src="https://raw.githubusercontent.com/TradingBotX/market-making-bot/main/logos/huobi.png" width="15" height="15" alt="Huobi"> [Huobi](https://www.huobi.com/)  
 
-We apologize for any inconvenience caused by our earlier decision to temporarily exclude Binance and Coinbase exchanges from our platform. We deeply appreciate your patience and understanding during this period.
+We extend our sincere apologies for any inconvenience caused by our previous decision to temporarily suspend Binance and Coinbase exchanges from our platform. Your patience and understanding during this period are highly valued, and we deeply appreciate your ongoing support.
 
 ## Reasons for Temporary Exclusion
 
-The temporary exclusion of Binance and Coinbase exchanges from our supported list is due to several factors, with one of the main considerations being the increased regulatory scrutiny both exchanges have faced in recent months. This regulatory environment has posed challenges in effectively integrating with these platforms.
+The temporary removal of Binance and Coinbase exchanges from our list of supported platforms is a result of various factors. One of the primary considerations is the heightened regulatory scrutiny that both exchanges have encountered in recent months. This regulatory landscape has presented complexities in establishing effective integration with these platforms. Rest assured, we are actively working to address these challenges and seek ways to restore support for these exchanges as soon as possible. Your patience and understanding during this process are greatly valued.
 
 ## Our Forward Outlook
 
-We want to assure our users that we remain committed to providing a seamless trading experience. While we are actively working to restore support for Binance and Coinbase exchanges, we are unable to provide a specific timeline for the reintegration of these platforms.
+We want to assure our users of our unwavering commitment to delivering a smooth and uninterrupted trading experience. As we diligently work on reinstating support for Binance and Coinbase exchanges, we regret that we are unable to provide a precise timeline for the reintegration of these platforms. Your understanding and patience are greatly appreciated as we strive to ensure the best possible trading environment for our valued users.
 
 ## Your Ongoing Support
 
-Your understanding and support have been invaluable to us as we navigate through this period of adjustment. We are dedicated to exploring all possibilities to enhance our services and reintroduce complete access to all exchanges. Timely updates will be shared as we make progress in this endeavor.
+Your comprehension and support have been immeasurably valuable to us as we navigate through this period of adaptation. We are committed to exploring every avenue to elevate our services and restore full access to all exchanges. We will keep you informed with timely updates as we continue to make strides in this pursuit. Your ongoing partnership is greatly appreciated.
 
 Thank you for being part of the TradingBotX community.
 
@@ -60,31 +60,34 @@ When engaging in cryptocurrency trading, you are entering dynamic markets where 
 
 ## Steps to Start the Bot
 
-To restrict site access to only the local environment, utilize `localhost:port` in the `.env` files for both the client and server components, where `port` refers to the specific port numbers you're using. If your intention is to access the site remotely, replace `localhost:port` with `your_ip:port` in both `.env` files, again using the appropriate IP address and port number. After these configurations are set, proceed to start the applications. This way, you ensure seamless operation whether accessing the applications locally or remotely.
+To restrict site access to only the local environment, utilize `localhost:port` in the `.env` files for both the client and server components, where `port` refers to the specific port numbers you're using. If your intention is to access the site remotely, replace `localhost:port` with `your_ip:port` in both `.env` files, again using the appropriate IP address and port number. Once you've configured these settings, proceed to initiate the applications. This will guarantee smooth operation, whether you're accessing the applications locally or remotely.
 
 ### Method 1 : Docker Setup
 
 Follow these steps to get the project up and running:
 
-1. Clone this repository:
+1. **Clone this repository**:
 
     ```bash
     git clone https://github.com/tradingbotx/market-making-bot
     cd market-making-bot
     ```
 
-2. Navigate to the directory containing the `docker-compose.yml` file.
+2. **Configure Environment Variables:**  
+    Please ensure to update the `.env` files situated in both the client and server directories. To assist you in this process, you can refer to the provided `.env.example` files. Insert the required values that are pertinent to your environment. Please be aware that we have also made modifications to the server `.env.example` file to meet the requisites for Docker images.
 
-3. Start the services:
+3. Navigate to the directory containing the `docker-compose.yml` file.
+
+4. **Start the services**:
 
     ```bash
     docker-compose build
     docker-compose up
     ```
 
-4. For local access, reach the React app through [http://localhost:3000](http://localhost:3000) and the Node.js app via [http://localhost:5000](http://localhost:5000). To access them over the web, access the React app at http://yourip:3000 and the Node.js app at http://yourip:5000, replacing "yourip" with the appropriate IP address.
+5. For local access, reach the React app through [http://localhost:3000](http://localhost:3000) and the Node.js app via [http://localhost:5000](http://localhost:5000). To access them over the web, access the React app at http://yourip:3000 and the Node.js app at http://yourip:5000, replacing "yourip" with the appropriate IP address.
 
-5. To stop the services, press `Ctrl + C` in the terminal where you started the services, and then remove the containers:
+6. To stop the services, press `Ctrl + C` in the terminal where you started the services, and then remove the containers:
 
     ```bash
     docker-compose down
@@ -114,7 +117,9 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
     ```
 
 3. **Configure Environment Variables:**  
-    Update the `.env` files located in the client and server folders. You can use the provided `.env.example` files as references. Fill in the necessary values for your environment.  
+    Ensure that you update the `.env` files located within both the client and server directories. For your convenience, you can consult the supplied `.env.example` files as points of reference. Proceed to complete the essential values specific to your environment.
+
+    Kindly note that the current `.env.example` file for the server aligns with Docker configurations. In light of this, kindly substitute the `MONGO_URL` with your individual connection string. Furthermore, within the `REDIS_HOST`, use the remote IP address for remote Redis, or if utilizing a locally installed Redis, input `localhost`. This ensures proper configuration for your Redis instance.
 
 4. **Start the Server:**  
     Launch the server using the following command to start the application with nodemon:  

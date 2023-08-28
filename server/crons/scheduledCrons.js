@@ -22,7 +22,6 @@ new CronJob(
     await spreadBotController.updateOrdersMin();
     // await spreadBotController.placeFailedOrders();
     await spreadBotController.checkOrderNumbers();
-    await spreadBotController.updateCancelOrders();
   },
   null,
   true,

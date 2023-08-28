@@ -75,7 +75,7 @@ module.exports = {
     try {
       if (!flags["generateOrders-SBC"]) {
         flags["generateOrders-SBC"] = true;
-        logger.info("generating spread bot orders");
+        logger.debug("generating spread bot orders");
         let i,
           j,
           pair,
@@ -86,7 +86,8 @@ module.exports = {
           order,
           usdtPrice,
           newOrder,
-          uniqueId;
+          uniqueId,
+          checkOrder;
         for (i = 0; i < currencies.length; i++) {
           pair = `${currencies[i]}-USDT`;
           converter = JSON.parse(await RedisClient.get("converterPrice"));
@@ -141,15 +142,26 @@ module.exports = {
                 newOrder.save();
               }
             }
+            await spreadBotDetails.updateMany(
+              {
+                pair: { $regex: `${pair.split("-")[0]}` },
+                status: "active",
+                ordersGenerated: false,
+              },
+              { ordersGenerated: true }
+            );
           }
-          await spreadBotDetails.updateMany(
-            {
-              pair: { $regex: `${pair.split("-")[0]}` },
-              status: "active",
-              ordersGenerated: false,
-            },
-            { ordersGenerated: true }
-          );
+          checkOrder = await spreadBotDetails.findOne({
+            pair: { $regex: `${currencies[i]}` },
+            status: "active",
+          });
+          if (!checkOrder) {
+            await spreadBotGeneratedOrders.updateMany(
+              { currency: currencies[i], status: "active" },
+              { status: "cancelled" },
+              { multi: true }
+            );
+          }
         }
         flags["generateOrders-SBC"] = false;
       }
@@ -1151,71 +1163,6 @@ module.exports = {
     } catch (error) {
       logger.error(`spreadBotController_getOrders_error`, error);
       return responseHelper.serverError(res, error);
-    }
-  },
-
-  updateCancelOrders: async () => {
-    try {
-      if (!flags[`updateCancelOrders-SBC`]) {
-        flags[`updateCancelOrders-SBC`] = true;
-        const orders = await spreadBotDetails
-          .find({ status: "active" })
-          .sort({ createdAt: -1 });
-        const types = ["buy", "sell"];
-        let i,
-          j,
-          k,
-          order,
-          openOrders,
-          mappingId,
-          openOrder,
-          maxAmount,
-          dividend,
-          amount;
-        for (i = 0; i < orders.length; i++) {
-          order = orders[i];
-          mappingId = order.uniqueId;
-          for (j = 0; j < types.length; j++) {
-            if (types[j] == "sell") {
-              openOrders = await spreadBotOrders
-                .find({ status: "active", type: "sell", mappingId })
-                .sort({ usdtPrice: 1 });
-              maxAmount = parseFloat(order.amountSell) * 1.05;
-            } else {
-              openOrders = await spreadBotOrders
-                .find({ status: "active", type: "buy", mappingId })
-                .sort({ usdtPrice: -1 });
-              maxAmount = parseFloat(order.amountBuy) * 1.05;
-            }
-            for (k = 0; k < openOrders.length && k < 7; k++) {
-              openOrder = openOrders[k];
-              amount = parseFloat(openOrder.usdtTotal);
-              dividend = parseFloat(parseFloat(amount / maxAmount).toFixed(4));
-              if (dividend >= 1) {
-                await spreadBotOrders.findOneAndUpdate(
-                  { uniqueId: openOrder.uniqueId },
-                  { cancelling: true }
-                );
-              }
-            }
-            for (k = 7; k < openOrders.length; k++) {
-              openOrder = openOrders[k];
-              amount = parseFloat(openOrder.usdtTotal);
-              dividend = parseFloat(parseFloat(amount / maxAmount).toFixed(4));
-              if (dividend <= 1) {
-                await spreadBotOrders.findOneAndUpdate(
-                  { uniqueId: openOrder.uniqueId },
-                  { cancelling: true }
-                );
-              }
-            }
-          }
-        }
-        flags[`updateCancelOrders-SBC`] = false;
-      }
-    } catch (error) {
-      logger.error(`spreadBotController_updateCancelOrders_error`, error);
-      flags[`updateCancelOrders-SBC`] = false;
     }
   },
 };
