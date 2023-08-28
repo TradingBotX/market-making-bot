@@ -60,7 +60,7 @@ When engaging in cryptocurrency trading, you are entering dynamic markets where 
 
 ## Steps to Start the Bot
 
-To restrict site access to only the local environment, utilize "localhost:port" in the .env files for both the client and server components, where "port" refers to the specific port numbers you're using. If your intention is to access the site remotely, replace "localhost:port" with "your_ip:port" in both .env files, again using the appropriate IP address and port number. After these configurations are set, proceed to start the applications. This way, you ensure seamless operation whether accessing the applications locally or remotely.
+To restrict site access to only the local environment, utilize `localhost:port` in the `.env` files for both the client and server components, where `port` refers to the specific port numbers you're using. If your intention is to access the site remotely, replace `localhost:port` with `your_ip:port` in both `.env` files, again using the appropriate IP address and port number. After these configurations are set, proceed to start the applications. This way, you ensure seamless operation whether accessing the applications locally or remotely.
 
 ### Method 1 : Docker Setup
 
