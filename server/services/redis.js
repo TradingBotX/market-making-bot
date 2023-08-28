@@ -485,7 +485,7 @@ async function SyncNamespaces() {
         });
         return acc;
       }, []);
-      logger.info(":SyncNamespaces", newNamespaces);
+      logger.debug(":SyncNamespaces", newNamespaces);
       logger.debug("fetched exchange names");
       for (let currNamespace of newNamespaces) {
         if (exchangeWorkers.hasOwnProperty(currNamespace) !== true) {
@@ -510,7 +510,7 @@ async function SyncArbitrageOperations() {
   try {
     const arbitrageOperations = await ArbitrageOperations.findOne({}).lean();
     if (arbitrageOperations === null) {
-      logger.error("no arbitrage operations set, using default");
+      logger.debug("no arbitrage operations set, using default");
     } else {
       ArbitradeOperations["minAmount"] = arbitrageOperations.minAmount;
       ArbitradeOperations["maxAmount"] = arbitrageOperations.maxAmount;
@@ -521,7 +521,7 @@ async function SyncArbitrageOperations() {
       ArbitradeOperations.connectionDetails =
         arbitrageOperations.connectionDetails;
       ArbitradeOperations["status"] = arbitrageOperations.status || false;
-      logger.info(":SyncArbitrageOperations redis");
+      logger.debug(":SyncArbitrageOperations redis");
     }
     socket_io.emit("arbitrageOperations", ArbitradeOperations);
   } catch (e) {

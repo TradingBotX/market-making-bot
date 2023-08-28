@@ -111,39 +111,45 @@ async function updateXDCPrice() {
   let query = {};
   //XDC price update
   const XDCUSDTBook = await bitrue.orderBook("XDC-USDT");
-  query[`XDC-USDT`] = {
-    bid: [parseFloat(parseFloat(XDCUSDTBook.bids[0][0]).toFixed(6))],
-    ask: [parseFloat(parseFloat(XDCUSDTBook.asks[0][0]).toFixed(6))],
-  };
+  if (XDCUSDTBook.bids[0] && XDCUSDTBook.asks[0])
+    query[`XDC-USDT`] = {
+      bid: [parseFloat(parseFloat(XDCUSDTBook.bids[0][0]).toFixed(6))],
+      ask: [parseFloat(parseFloat(XDCUSDTBook.asks[0][0]).toFixed(6))],
+    };
   //SRX price update
   const SRXUSDTBook = await bitrue.orderBook("SRX-USDT");
-  query[`SRX-USDT`] = {
-    bid: [parseFloat(parseFloat(SRXUSDTBook.bids[0][0]).toFixed(6))],
-    ask: [parseFloat(parseFloat(SRXUSDTBook.asks[0][0]).toFixed(6))],
-  };
+  if (SRXUSDTBook.bids[0] && SRXUSDTBook.asks[0])
+    query[`SRX-USDT`] = {
+      bid: [parseFloat(parseFloat(SRXUSDTBook.bids[0][0]).toFixed(6))],
+      ask: [parseFloat(parseFloat(SRXUSDTBook.asks[0][0]).toFixed(6))],
+    };
   //PLI
   const PLIUSDTBook = await bitrue.orderBook("PLI-USDT");
-  query[`PLI-USDT`] = {
-    bid: [parseFloat(parseFloat(PLIUSDTBook.bids[0][0]).toFixed(6))],
-    ask: [parseFloat(parseFloat(PLIUSDTBook.asks[0][0]).toFixed(6))],
-  };
+  if (PLIUSDTBook.bids[0] && PLIUSDTBook.asks[0])
+    query[`PLI-USDT`] = {
+      bid: [parseFloat(parseFloat(PLIUSDTBook.bids[0][0]).toFixed(6))],
+      ask: [parseFloat(parseFloat(PLIUSDTBook.asks[0][0]).toFixed(6))],
+    };
   const LBTUSDTBook = await bitrue.orderBook("LBT-USDT");
-  query[`LBT-USDT`] = {
-    bid: [parseFloat(parseFloat(LBTUSDTBook.bids[0][0]).toFixed(6))],
-    ask: [parseFloat(parseFloat(LBTUSDTBook.asks[0][0]).toFixed(6))],
-  };
+  if (LBTUSDTBook.bids[0] && LBTUSDTBook.asks[0])
+    query[`LBT-USDT`] = {
+      bid: [parseFloat(parseFloat(LBTUSDTBook.bids[0][0]).toFixed(6))],
+      ask: [parseFloat(parseFloat(LBTUSDTBook.asks[0][0]).toFixed(6))],
+    };
   InternalBus.emit(GlobalEvents.converter_price, query);
   const USPLUSUSDTBook = await bitrue.orderBook("USPLUS-USDT");
-  query[`USPLUS-USDT`] = {
-    bid: [parseFloat(parseFloat(USPLUSUSDTBook.bids[0][0]).toFixed(6))],
-    ask: [parseFloat(parseFloat(USPLUSUSDTBook.asks[0][0]).toFixed(6))],
-  };
+  if (USPLUSUSDTBook.bids[0] && USPLUSUSDTBook.asks[0])
+    query[`USPLUS-USDT`] = {
+      bid: [parseFloat(parseFloat(USPLUSUSDTBook.bids[0][0]).toFixed(6))],
+      ask: [parseFloat(parseFloat(USPLUSUSDTBook.asks[0][0]).toFixed(6))],
+    };
   InternalBus.emit(GlobalEvents.converter_price, query);
   const FXDUSDTBook = await bitrue.orderBook("USPLUS-USDT");
-  query[`FXD-USDT`] = {
-    bid: [parseFloat(parseFloat(FXDUSDTBook.bids[0][0]).toFixed(6))],
-    ask: [parseFloat(parseFloat(FXDUSDTBook.asks[0][0]).toFixed(6))],
-  };
+  if (FXDUSDTBook.bids[0] && FXDUSDTBook.asks[0])
+    query[`FXD-USDT`] = {
+      bid: [parseFloat(parseFloat(FXDUSDTBook.bids[0][0]).toFixed(6))],
+      ask: [parseFloat(parseFloat(FXDUSDTBook.asks[0][0]).toFixed(6))],
+    };
   InternalBus.emit(GlobalEvents.converter_price, query);
 }
 
@@ -151,10 +157,11 @@ async function updateXDCPrice() {
 async function updateEURPrice() {
   let query = {};
   const EURUSDTBook = await bittrex.orderBook("USDT-EUR");
-  query[`EUR-USDT`] = {
-    bid: [parseFloat(parseFloat(1 / EURUSDTBook.asks[1].rate).toFixed(8))],
-    ask: [parseFloat(parseFloat(1 / EURUSDTBook.bids[1].rate).toFixed(8))],
-  };
+  if (EURUSDTBook.bids[1] && EURUSDTBook.asks[1])
+    query[`EUR-USDT`] = {
+      bid: [parseFloat(parseFloat(1 / EURUSDTBook.asks[1].rate).toFixed(8))],
+      ask: [parseFloat(parseFloat(1 / EURUSDTBook.bids[1].rate).toFixed(8))],
+    };
   InternalBus.emit(GlobalEvents.converter_price, query);
 }
 

@@ -60,6 +60,8 @@ When engaging in cryptocurrency trading, you are entering dynamic markets where 
 
 ## Steps to Start the Bot
 
+To restrict site access to only the local environment, utilize "localhost:port" in the .env files for both the client and server components, where "port" refers to the specific port numbers you're using. If your intention is to access the site remotely, replace "localhost:port" with "your_ip:port" in both .env files, again using the appropriate IP address and port number. After these configurations are set, proceed to start the applications. This way, you ensure seamless operation whether accessing the applications locally or remotely.
+
 ### Method 1 : Docker Setup
 
 Follow these steps to get the project up and running:
@@ -80,7 +82,7 @@ Follow these steps to get the project up and running:
     docker-compose up
     ```
 
-4. Access the React app at [http://localhost:3000](http://localhost:3000) and the Node.js app at [http://localhost:5000](http://localhost:5000).
+4. For local access, reach the React app through [http://localhost:3000](http://localhost:3000) and the Node.js app via [http://localhost:5000](http://localhost:5000). To access them over the web, access the React app at http://yourip:3000 and the Node.js app at http://yourip:5000, replacing "yourip" with the appropriate IP address.
 
 5. To stop the services, press `Ctrl + C` in the terminal where you started the services, and then remove the containers:
 
@@ -132,7 +134,7 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
 
   Upon initializing the server for the first time, an email and password will be generated for you. This information will be displayed in the command prompt and saved in the `/server/helpers/creds.json` file. We strongly advise you to empty the file after copying the credentials to ensure security. Safely storing this information is of utmost importance, as it will be essential for your future login via the client interface. If the need arises to reset the user, you can achieve this by modifying the `RESET_ADMIN` variable in the server's `.env` file to true. Once the necessary changes are made, remember to set the variable back to false.  
 
-  Access the client by navigating to [http://localhost:3000/](http://localhost:3000) and the server at [http://localhost:5000/](http://localhost:5000).   
+  For local access, reach the React app through [http://localhost:3000](http://localhost:3000) and the Node.js app via [http://localhost:5000](http://localhost:5000). To access them over the web, access the React app at http://yourip:3000 and the Node.js app at http://yourip:5000, replacing "yourip" with the appropriate IP address. 
 
 1. **Log in to the Client:**  
     Using the credentials displayed during server startup, log in to the client interface.  

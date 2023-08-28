@@ -553,7 +553,7 @@ async function SyncExchangeInfo() {
       };
     });
   }
-  logger.info(":orderPlacement decimals synced");
+  logger.debug(":orderPlacement decimals synced");
   setExchangePairInfo(ExchangePairInfo);
   socket_io.in("best_price").emit("exchangePairInfo", ExchangePairInfo);
 }
