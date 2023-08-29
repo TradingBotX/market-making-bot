@@ -21,11 +21,11 @@ const columns = [
   },
   {
     dataField: "amountBuy",
-    text: "Buy Order Amount",
+    text: "Buy Order Amount(USDT)",
   },
   {
     dataField: "amountSell",
-    text: "Sell Order Amount",
+    text: "Sell Order Amount(USDT)",
   },
   { dataField: "percentGap", text: "Gap Percent" },
   // {
@@ -254,7 +254,7 @@ class Liquidity extends Component {
                       }
                     />
                     <RenderInput
-                      label="Buy Order Amount (Each Order)"
+                      label="Buy Order Amount USDT (Each Order)"
                       element={
                         <Form.Control
                           type="text"
@@ -270,7 +270,7 @@ class Liquidity extends Component {
                       }
                     />
                     <RenderInput
-                      label="Sell Order Amount (Each Order)"
+                      label="Sell Order Amount USDT (Each Order)"
                       element={
                         <Form.Control
                           type="text"

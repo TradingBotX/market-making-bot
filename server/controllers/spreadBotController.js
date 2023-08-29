@@ -248,22 +248,32 @@ module.exports = {
               if (order.type == "buy") {
                 maxAmount = parseFloat(order.amountBuy) * 1.05;
                 minAmount = parseFloat(order.amountBuy) * 0.95;
-                amount = parseFloat(
-                  parseFloat(
-                    Math.random() * (maxAmount - minAmount) + minAmount
-                  ).toFixed(ExchangePairInfo[exchange][pair].decimalsAmount)
-                );
+                // amount = parseFloat(
+                //   parseFloat(
+                //     Math.random() * (maxAmount - minAmount) + minAmount
+                //   ).toFixed(ExchangePairInfo[exchange][pair].decimalsAmount)
+                // );
               } else {
                 maxAmount = parseFloat(order.amountSell) * 1.05;
                 minAmount = parseFloat(order.amountSell) * 0.95;
-                amount = parseFloat(
-                  parseFloat(
-                    Math.random() * (maxAmount - minAmount) + minAmount
-                  ).toFixed(ExchangePairInfo[exchange][pair].decimalsAmount)
-                );
+                // amount = parseFloat(
+                //   parseFloat(
+                //     Math.random() * (maxAmount - minAmount) + minAmount
+                //   ).toFixed(ExchangePairInfo[exchange][pair].decimalsAmount)
+                // );
               }
+              usdtTotal = parseFloat(
+                parseFloat(
+                  Math.random() * (maxAmount - minAmount) + minAmount
+                ).toFixed(4)
+              );
+              amount = parseFloat(
+                parseFloat(usdtTotal / usdtPrice).toFixed(
+                  ExchangePairInfo[exchange][pair].decimalsAmount
+                )
+              );
               total = parseFloat(parseFloat(amount * price).toFixed(4));
-              usdtTotal = parseFloat(parseFloat(amount * usdtPrice).toFixed(4));
+              // usdtTotal = parseFloat(parseFloat(amount * usdtPrice).toFixed(4));
               orderData = {
                 type,
                 amount,
