@@ -236,22 +236,24 @@ exports.GetAccount = async (exchange) => {
   if (data) {
     if (exchange == "kucoin") {
       return {
-        apiKey: GetDecryptedEnv(data.apiKey),
-        apiSecret: GetDecryptedEnv(data.apiSecret),
-        passPhrase: GetDecryptedEnv(data.passPhrase),
+        apiKey: await GetDecryptedEnv(data.apiKey),
+        apiSecret: await GetDecryptedEnv(data.apiSecret),
+        passPhrase: await GetDecryptedEnv(data.passPhrase),
         subAccUserId:
-          data.subAccUserId != "" ? GetDecryptedEnv(data.subAccUserId) : "",
+          data.subAccUserId != ""
+            ? await GetDecryptedEnv(data.subAccUserId)
+            : "",
       };
     } else if (exchange == "huobi") {
       return {
-        apiKey: GetDecryptedEnv(data.apiKey),
-        apiSecret: GetDecryptedEnv(data.apiSecret),
-        accountId: GetDecryptedEnv(data.accountId),
+        apiKey: await GetDecryptedEnv(data.apiKey),
+        apiSecret: await GetDecryptedEnv(data.apiSecret),
+        accountId: await GetDecryptedEnv(data.accountId),
       };
     } else {
       return {
-        apiKey: GetDecryptedEnv(data.apiKey),
-        apiSecret: GetDecryptedEnv(data.apiSecret),
+        apiKey: await GetDecryptedEnv(data.apiKey),
+        apiSecret: await GetDecryptedEnv(data.apiSecret),
       };
     }
   } else {

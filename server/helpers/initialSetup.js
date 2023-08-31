@@ -11,10 +11,18 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const logSymbols = require("log-symbols");
+const dailyData = require("../models/dailyData");
 
 module.exports = {
   checkSetup: async () => {
     try {
+      let data = await dailyData.findOne({ id: 1 });
+      while (!data || !data.data) {
+        let updatedSecret = crypto.randomBytes(16).toString("hex");
+        let newData = new dailyData({ id: 1, data: updatedSecret });
+        await newData.save();
+        data = await dailyData.findOne({ id: 1 });
+      }
       const checkAdmin = await admin.findOne({});
       if (!checkAdmin || process.env.RESET_ADMIN === "true") {
         if (process.env.RESET_ADMIN === "true") {
@@ -41,15 +49,15 @@ module.exports = {
         let jsonCreds = JSON.stringify({ email: email, password: password });
         fs.writeFileSync(path.resolve(__dirname, "creds.json"), jsonCreds);
       }
-      let data = fs.readFileSync(path.resolve(__dirname, "data.json"), "UTF-8");
-      let secret = JSON.parse(data).secret;
-      while (secret == "" || secret.length != 32) {
-        let updatedSecret = crypto.randomBytes(16).toString("hex");
-        let jsonSecret = JSON.stringify({ secret: updatedSecret });
-        fs.writeFileSync(path.resolve(__dirname, "data.json"), jsonSecret);
-        data = fs.readFileSync(path.resolve(__dirname, "data.json"), "UTF-8");
-        secret = JSON.parse(data).secret;
-      }
+      // let data = fs.readFileSync(path.resolve(__dirname, "data.json"), "UTF-8");
+      // let secret = JSON.parse(data).secret;
+      // while (secret == "" || secret.length != 32) {
+      //   let updatedSecret = crypto.randomBytes(16).toString("hex");
+      //   let jsonSecret = JSON.stringify({ secret: updatedSecret });
+      //   fs.writeFileSync(path.resolve(__dirname, "data.json"), jsonSecret);
+      //   data = fs.readFileSync(path.resolve(__dirname, "data.json"), "UTF-8");
+      //   secret = JSON.parse(data).secret;
+      // }
       let i,
         j,
         k,

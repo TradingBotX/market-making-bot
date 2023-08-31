@@ -31,6 +31,7 @@ const dailyStats = require("../models/dailyStats");
 const exchangePair = require("../models/exchangePair");
 const { AESEncrypt } = require("../helpers/crypto");
 const exchangeData = require("../models/exchangeData");
+const dailyData = require("../models/dailyData");
 const uuid = require("uuid").v4;
 
 const tokenExpiryTime = process.env.TOKEN_EXPIRY_TIME || 900;
@@ -573,11 +574,13 @@ exports.getDataByTimestamp = async (req, res) => {
 
 exports.addKey = async (req, res) => {
   try {
-    const data = fs.readFileSync(
-      path.resolve(__dirname, "../helpers/data.json"),
-      "UTF-8"
-    );
-    const secret = JSON.parse(data).secret;
+    // const data = fs.readFileSync(
+    //   path.resolve(__dirname, "../helpers/data.json"),
+    //   "UTF-8"
+    // );
+    // const secret = JSON.parse(data).secret;
+    const data = await dailyData.findOne({ id: 1 });
+    const secret = data.data;
     const exchange = req.body.exchange;
     const checkData = await exchangeData.findOne({ exchange });
     if (!checkData) {
