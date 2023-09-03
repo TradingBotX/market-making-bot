@@ -9,6 +9,7 @@ import { ParseError } from "../helpers/ResponseHelper";
 import DataTable from "./DataTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const columns = [
   {
@@ -174,21 +175,32 @@ class Liquidity extends Component {
               >
                 CANCEL
               </Button>
-              {/* <Button className="action-btn">Details</Button> */}
+              <Link
+                className="action-btn"
+                role="button"
+                to={`/liquidity-details/${allData[i].uniqueId}`}
+              >
+                Details
+              </Link>
             </>
           ) : (
-            // <>
-            //   <span
-            //     style={{
-            //       color: allData[i].status === "completed" ? "green" : "red",
-            //       textTransform: "uppercase",
-            //     }}
-            //   >
-            //     {allData[i].status}
-            //   </span>
-            //   <Button className="action-btn">Details</Button>
-            // </>
-            <></>
+            <>
+              <span
+                style={{
+                  color: allData[i].status === "completed" ? "green" : "red",
+                  textTransform: "uppercase",
+                }}
+              >
+                {allData[i].status}
+              </span>
+              <Link
+                className="action-btn"
+                role="button"
+                to={`/liquidity-details/${allData[i].uniqueId}`}
+              >
+                Details
+              </Link>
+            </>
           ),
       };
       returnData.push(obj);
