@@ -29,6 +29,7 @@ import AdminProfile from "../containers/AdminProfile";
 import DailyStats from "../containers/DailyStats";
 import Liquidity from "./Liquidity";
 import ManageKeys from "./ManageKeys";
+import LiquidityDetails from "./LiquidityDetails";
 // import OrderBookSharing from "../containers/OrderBookSharing";
 
 class App extends React.Component {
@@ -47,6 +48,10 @@ class App extends React.Component {
           <Route exact path="/daily-stats" component={DailyStats} />
           <Route exact path="/liquidity" component={Liquidity} />
           <Route exact path="/manage-keys" component={ManageKeys} />
+          <Route
+            path="/liquidity-details/:uniqueId"
+            component={LiquidityDetails}
+          />
           <Redirect from="*" to="/" />
         </Switch>
       );

@@ -1197,3 +1197,39 @@ export const deleteKey = (data) => {
     }
   };
 };
+
+export const getLiquidityOrderDetails = (data) => {
+  return (dispatch) => {
+    try {
+      dispatch({ type: types.GET_LIQUIDITY_DETAILS_START });
+      AxiosInstance.post("/spreadbot/getorderdetails", data, {
+        headers: { Authorization: localStorage.getItem("crypbot_jwt") },
+      })
+        .then((resp) => {
+          resp = resp.data;
+          if (resp.statusCode === 200) {
+            dispatch({
+              type: types.GET_LIQUIDITY_DETAILS_SUCCESS,
+              success: resp.message,
+              data: resp.data,
+            });
+          } else {
+            dispatch({
+              type: types.GET_LIQUIDITY_DETAILS_FAIL,
+              error: ParseError(resp),
+            });
+          }
+        })
+        .catch((e) => {
+          let err = ParseError(e);
+          dispatch({ type: types.GET_LIQUIDITY_DETAILS_FAIL, error: err });
+        })
+        .finally(() => {
+          dispatch({ type: types.GET_LIQUIDITY_DETAILS_FINISH });
+        });
+    } catch (e) {
+      let err = ParseError(e);
+      dispatch({ type: types.GET_LIQUIDITY_DETAILS_FAIL, error: err });
+    }
+  };
+};
