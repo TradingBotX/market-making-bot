@@ -7,5 +7,10 @@ const RequireAdmin = require("../middlewares/requireAdmin");
 router.post("/addorder", RequireAdmin, spreadBotController.addOrder);
 router.post("/cancelorder", RequireAdmin, spreadBotController.cancelOrder);
 router.get("/getorders", RequireAdmin, spreadBotController.getOrders);
+router.post(
+  "/getorderdetails",
+  RequireAdmin,
+  spreadBotController.getOrderDetails
+);
 
 module.exports = router;

@@ -1175,4 +1175,82 @@ module.exports = {
       return responseHelper.serverError(res, error);
     }
   },
+
+  getOrderDetails: async (req, res) => {
+    try {
+      const uniqueId = req.body.uniqueId;
+      const order = await spreadBotDetails.findOne({ uniqueId }).lean();
+      if (order) {
+        let orders = [],
+          i,
+          tempOrder,
+          orderDetails = order,
+          data;
+        const openOrders = await spreadBotOrders
+          .find({ status: "active", mappingId: uniqueId })
+          .sort({ usdtPrice: -1 });
+        for (i = 0; i < openOrders.length; i++) {
+          tempOrder = openOrders[i];
+          orders.push(tempOrder);
+        }
+        const completedOrders = await spreadBotOrders
+          .find({
+            status: { $ne: "active" },
+            filledQty: { $gt: 0 },
+            mappingId: uniqueId,
+          })
+          .sort({ createdAt: -1 })
+          .lean();
+        for (i = 0; i < completedOrders.length; i++) {
+          tempOrder = completedOrders[i];
+          orders.push(tempOrder);
+        }
+        data = await spreadBotOrders.aggregate([
+          {
+            $match: {
+              status: "active",
+              type: "buy",
+              mappingId: uniqueId,
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              total: { $sum: "$originalQty" },
+              USDT: { $sum: "$usdtTotal" },
+            },
+          },
+        ]);
+        orderDetails.currentBuyTotal = data[0] ? data[0].total : 0;
+        orderDetails.currentBuyUSDT = data[0] ? data[0].USDT : 0;
+        data = await spreadBotOrders.aggregate([
+          {
+            $match: {
+              status: "active",
+              type: "sell",
+              mappingId: uniqueId,
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              total: { $sum: "$originalQty" },
+              USDT: { $sum: "$usdtTotal" },
+            },
+          },
+        ]);
+        orderDetails.currentSellTotal = data[0] ? data[0].total : 0;
+        orderDetails.currentSellUSDT = data[0] ? data[0].USDT : 0;
+        return responseHelper.successWithData(res, "Got data sucessfully", {
+          orderDetails,
+          orders,
+        });
+      } else {
+        return responseHelper.error(res, "Invalid Order");
+      }
+    } catch (error) {
+      logger.error(`spreadBotController_getOrderDetails_error`, error);
+      return responseHelper.serverError(res, error);
+    }
+  },
 };
