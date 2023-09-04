@@ -55,7 +55,7 @@ module.exports = {
         mappedOrders: [],
         maxOrders,
         ordersGenerated: orders.length > 0 ? true : false,
-        percentGap: parseFloat(parseFloat(percentGap / 100).toFixed(4)),
+        percentGap: parseFloat(parseFloat(percentGap / 1000).toFixed(4)),
         balanceToBeMaintanedC1: parseFloat(data1.total),
         balanceToBeMaintanedC2: parseFloat(data2.total),
         lastSettledAtC1: usdtPrice,

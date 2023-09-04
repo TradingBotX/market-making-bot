@@ -84,7 +84,7 @@ let initialState = {
   pairs: [],
   amountBuy: 0,
   amountSell: 0,
-  percentGap: 0,
+  percentGap: 2,
   maxOrders: 10,
 };
 
@@ -298,11 +298,11 @@ class Liquidity extends Component {
                       }
                     />
                     <RenderInput
-                      label="Percent Gap (Between Each Order)"
+                      label="Spread Percent (Percentage of spread from the median price on both sides, between which the orders will be placed)"
                       element={
                         <Form.Control
                           type="text"
-                          placeholder="Gap in percent between each order"
+                          placeholder="Spread percent"
                           value={this.state.percentGap}
                           onChange={(e) => {
                             this.setState({
