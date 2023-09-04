@@ -104,9 +104,9 @@ module.exports = {
           if (order) {
             for (j = 1; j <= 10; j++) {
               usdtPrice = parseFloat(
-                parseFloat(
-                  baseUsdtPrice * (1 + (order.percentGap / 100) * j)
-                ).toFixed(6)
+                parseFloat(baseUsdtPrice * (1 + order.percentGap * j)).toFixed(
+                  6
+                )
               );
               uniqueId = uuid();
               newOrder = new spreadBotGeneratedOrders({
@@ -121,26 +121,24 @@ module.exports = {
                 mappedOrders: [],
               });
               newOrder.save();
-              if (j != 1) {
-                usdtPrice = parseFloat(
-                  parseFloat(
-                    baseUsdtPrice * (1 - (order.percentGap / 100) * j)
-                  ).toFixed(6)
-                );
-                uniqueId = uuid();
-                newOrder = new spreadBotGeneratedOrders({
-                  uniqueId,
-                  usdtPrice,
-                  currency: currencies[i],
-                  type: "buy",
-                  status: "active",
-                  revOrderId: "",
-                  oppOrderId: "",
-                  cancelling: false,
-                  mappedOrders: [],
-                });
-                newOrder.save();
-              }
+              usdtPrice = parseFloat(
+                parseFloat(baseUsdtPrice * (1 - order.percentGap * j)).toFixed(
+                  6
+                )
+              );
+              uniqueId = uuid();
+              newOrder = new spreadBotGeneratedOrders({
+                uniqueId,
+                usdtPrice,
+                currency: currencies[i],
+                type: "buy",
+                status: "active",
+                revOrderId: "",
+                oppOrderId: "",
+                cancelling: false,
+                mappedOrders: [],
+              });
+              newOrder.save();
             }
             await spreadBotDetails.updateMany(
               {
@@ -366,9 +364,9 @@ module.exports = {
         if (activeOrder) {
           if (type == "buy") {
             oppUsdtPrice = parseFloat(
-              parseFloat(
-                usdtPrice * (1 - 10 * (activeOrder.percentGap / 100))
-              ).toFixed(6)
+              parseFloat(usdtPrice * (1 - 10 * activeOrder.percentGap)).toFixed(
+                6
+              )
             );
             oppType = "buy";
             i = 1;
@@ -380,7 +378,7 @@ module.exports = {
             while (checkOrder != null) {
               oppUsdtPrice = parseFloat(
                 parseFloat(
-                  usdtPrice * (1 - (10 + i) * (activeOrder.percentGap / 100))
+                  usdtPrice * (1 - (10 + i) * activeOrder.percentGap)
                 ).toFixed(6)
               );
               checkOrder = await spreadBotGeneratedOrders.findOne({
@@ -392,9 +390,9 @@ module.exports = {
             }
           } else {
             oppUsdtPrice = parseFloat(
-              parseFloat(
-                usdtPrice * (1 + 10 * (activeOrder.percentGap / 100))
-              ).toFixed(6)
+              parseFloat(usdtPrice * (1 + 10 * activeOrder.percentGap)).toFixed(
+                6
+              )
             );
             oppType = "sell";
             i = 1;
@@ -406,7 +404,7 @@ module.exports = {
             while (checkOrder != null) {
               oppUsdtPrice = parseFloat(
                 parseFloat(
-                  usdtPrice * (1 + (10 + i) * (activeOrder.percentGap / 100))
+                  usdtPrice * (1 + (10 + i) * activeOrder.percentGap)
                 ).toFixed(6)
               );
               checkOrder = await spreadBotGeneratedOrders.findOne({
@@ -703,7 +701,7 @@ module.exports = {
             .limit(3);
           await module.exports.updateOrders(orders, 1);
           orders = await spreadBotOrders.find({ mappingId, status: "active" });
-          if (orders.length == 0) {
+          if (orders.length == 0 && openOrders[i].status == "stopped") {
             await spreadBotDetails.findOneAndUpdate(
               { uniqueId: mappingId },
               { status: "cancelled" }

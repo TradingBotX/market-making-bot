@@ -112,7 +112,7 @@ let ExchangePairInfo = {
   kucoin: {
     "XDC-USDT": {
       decimalsAmount: 0,
-      decimalsPrice: 4,
+      decimalsPrice: 5,
       minAmount: 500,
       maxAmount: 10000,
     },
