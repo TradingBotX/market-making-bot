@@ -32,6 +32,7 @@ const exchangePair = require("../models/exchangePair");
 const { AESEncrypt } = require("../helpers/crypto");
 const exchangeData = require("../models/exchangeData");
 const dailyData = require("../models/dailyData");
+const huobi = require("../helpers/exchangeHelpers/huobi");
 const uuid = require("uuid").v4;
 
 const tokenExpiryTime = process.env.TOKEN_EXPIRY_TIME || 900;
@@ -599,6 +600,20 @@ exports.addKey = async (req, res) => {
       passPhrase = req.body.passPhrase || "";
       subAccUserId = req.body.subAccUserId || "";
       accountId = req.body.accountId || "";
+      if (exchange == "huobi") {
+        const accountData = await huobi.getAccounts({ apiKey, apiSecret });
+        if (accountData != "error" && accountData.data) {
+          if (accountData.data.some((e) => e.type == "spot")) {
+            accountId = accountData.data
+              .filter((e) => e.type == "spot")[0]
+              .id.toString();
+          } else {
+            return responseHelper.error(res, "Spot trading rights not given");
+          }
+        } else {
+          return responseHelper.error(res, "Invalid API Key or Secret");
+        }
+      }
       encApiKey = apiKey == "" ? "" : AESEncrypt(apiKey, secret);
       encApiSecret = apiSecret == "" ? "" : AESEncrypt(apiSecret, secret);
       encPassPhrase = passPhrase == "" ? "" : AESEncrypt(passPhrase, secret);

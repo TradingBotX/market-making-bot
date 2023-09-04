@@ -193,6 +193,7 @@ class Liquidity extends Component {
               >
                 {allData[i].status}
               </span>
+              <br />
               <Link
                 className="action-btn"
                 role="button"

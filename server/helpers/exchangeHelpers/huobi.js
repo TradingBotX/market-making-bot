@@ -88,8 +88,8 @@ module.exports = {
       const SignatureVersion = 2;
       const AccessKeyId = apiKey;
       const method = "GET";
-      // const endPoint = `/v1/account/accounts`;
-      const endPoint = `/v2/sub-user/user-list`;
+      const endPoint = `/v1/account/accounts`;
+      // const endPoint = `/v2/sub-user/user-list`;
       const url = `${base}${endPoint}`;
       const data = {
         AccessKeyId,
