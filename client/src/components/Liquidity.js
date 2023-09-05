@@ -98,6 +98,9 @@ class Liquidity extends Component {
   componentDidMount() {
     this.props.getExchanges();
     this.props.getLiquidityDetails();
+    setInterval(() => {
+      this.props.getLiquidityDetails();
+    }, 1000 * 60 * 2);
   }
 
   componentDidUpdate(prevProps) {
@@ -155,7 +158,7 @@ class Liquidity extends Component {
         pair: allData[i].pair,
         amountBuy: allData[i].amountBuy,
         amountSell: allData[i].amountSell,
-        percentGap: allData[i].percentGap * 100,
+        percentGap: allData[i].percentGap * 1000,
         // maxOrders: allData[i].maxOrders,
         currentBuyTotal: parseInt(allData[i].currentBuyTotal),
         currentBuyUSDT: parseInt(allData[i].currentBuyUSDT),
@@ -338,15 +341,24 @@ class Liquidity extends Component {
                         disabled={this.state.placing}
                         onClick={() => {
                           this.setState({ placing: true });
-                          AxiosInstance.post("/spreadbot/addorder", {
-                            exchange: this.state.exchange,
-                            pair: this.state.pair,
-                            botName: this.state.botName,
-                            amountBuy: this.state.amountBuy,
-                            amountSell: this.state.amountSell,
-                            percentGap: this.state.percentGap,
-                            maxOrders: this.state.maxOrders,
-                          })
+                          AxiosInstance.post(
+                            "/spreadbot/addorder",
+                            {
+                              exchange: this.state.exchange,
+                              pair: this.state.pair,
+                              botName: this.state.botName,
+                              amountBuy: this.state.amountBuy,
+                              amountSell: this.state.amountSell,
+                              percentGap: this.state.percentGap,
+                              maxOrders: this.state.maxOrders,
+                            },
+                            {
+                              headers: {
+                                Authorization:
+                                  localStorage.getItem("crypbot_jwt"),
+                              },
+                            }
+                          )
                             .then((resp) => {
                               resp = resp.data;
                               if (resp.statusCode === 200) {

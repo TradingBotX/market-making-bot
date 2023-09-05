@@ -127,6 +127,11 @@ class LiquidityDetails extends Component {
     this.props.getLiquidityOrderDetails({
       uniqueId: this.props.params.uniqueId,
     });
+    setInterval(() => {
+      this.props.getLiquidityOrderDetails({
+        uniqueId: this.props.params.uniqueId,
+      });
+    }, 1000 * 60 * 2);
   }
 
   componentDidUpdate(prevProps) {
@@ -198,7 +203,7 @@ class LiquidityDetails extends Component {
       pair: allData.orderDetails.pair,
       amountBuy: allData.orderDetails.amountBuy,
       amountSell: allData.orderDetails.amountSell,
-      percentGap: allData.orderDetails.percentGap * 100,
+      percentGap: allData.orderDetails.percentGap * 1000,
       currentBuyTotal: parseInt(allData.orderDetails.currentBuyTotal),
       currentBuyUSDT: parseInt(allData.orderDetails.currentBuyUSDT),
       currentSellTotal: parseInt(allData.orderDetails.currentSellTotal),

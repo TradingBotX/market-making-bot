@@ -358,7 +358,7 @@ module.exports = {
         usdtPrice = order.usdtPrice;
         currency = order.currency;
         activeOrder = await spreadBotDetails.findOne({
-          pair: { $regex: `${currencies[i]}` },
+          pair: { $regex: `${currency}` },
           status: "active",
         });
         if (activeOrder) {

@@ -268,14 +268,23 @@ class ManageKeys extends Component {
                         disabled={this.state.placing}
                         onClick={() => {
                           this.setState({ placing: true });
-                          AxiosInstance.post("/admin/addkey", {
-                            exchange: this.state.exchange,
-                            apiKey: this.state.apiKey,
-                            apiSecret: this.state.apiSecret,
-                            passPhrase: this.state.passPhrase,
-                            subAccUserId: this.state.subAccUserId,
-                            accountId: this.state.accountId,
-                          })
+                          AxiosInstance.post(
+                            "/admin/addkey",
+                            {
+                              exchange: this.state.exchange,
+                              apiKey: this.state.apiKey,
+                              apiSecret: this.state.apiSecret,
+                              passPhrase: this.state.passPhrase,
+                              subAccUserId: this.state.subAccUserId,
+                              accountId: this.state.accountId,
+                            },
+                            {
+                              headers: {
+                                Authorization:
+                                  localStorage.getItem("crypbot_jwt"),
+                              },
+                            }
+                          )
                             .then((resp) => {
                               resp = resp.data;
                               if (resp.statusCode === 200) {
