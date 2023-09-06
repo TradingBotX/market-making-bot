@@ -98,9 +98,13 @@ class Liquidity extends Component {
   componentDidMount() {
     this.props.getExchanges();
     this.props.getLiquidityDetails();
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.props.getLiquidityDetails();
     }, 1000 * 60 * 2);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   componentDidUpdate(prevProps) {

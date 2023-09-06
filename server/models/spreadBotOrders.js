@@ -21,10 +21,10 @@ let spreadBotOrders = new Schema(
     feeCurrency: { type: String, default: "USD" },
     feesUSDT: { type: Number, default: 0 },
     status: { type: String, required: true, default: "active" },
-    // revOrderId: { type: String, default: "" },
-    // oppOrderId: { type: String, default: "" },
+    revOrderId: { type: String, default: "" },
+    oppOrderId: { type: String, default: "" },
     cancelling: { type: Boolean, default: false },
-    refId: { type: String },
+    // refId: { type: String },
   },
   {
     timestamps: true,

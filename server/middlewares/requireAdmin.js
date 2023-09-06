@@ -8,7 +8,7 @@ module.exports = function (req, res, next) {
     process.env.ACCESS_TOKEN_SECRET,
     async function (err, decoded) {
       if (err) {
-        logger.error(`requireAdmin_jwt_error`, err, token);
+        // logger.error(`requireAdmin_jwt_error`, err, token);
         return responseHelper.error(res, "please login again.");
       } else {
         if (decoded.level !== 1 && decoded.level !== 2) {

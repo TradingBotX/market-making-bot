@@ -16,11 +16,10 @@ new CronJob(
   "14 * * * * *",
   async () => {
     await spreadBotController.autoCancelOrders();
-    await spreadBotController.generateOrders();
-    await spreadBotController.placeOrders();
+    await spreadBotController.runBot();
     await spreadBotController.updateCancellingOrders();
     await spreadBotController.updateOrdersMin();
-    // await spreadBotController.placeFailedOrders();
+    await spreadBotController.placeFailedOrders();
     await spreadBotController.checkOrderNumbers();
   },
   null,

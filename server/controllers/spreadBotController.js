@@ -1,41 +1,30 @@
-const { ExchangePairInfo, UsdtPairs } = require("../helpers/constant");
-const {
-  RedisClient,
-  getSecondaryPair,
-  parseCompleteOrderBook,
-} = require("../services/redis");
-const uuid = require("uuid").v4;
 const responseHelper = require("../helpers/RESPONSE");
-const orderPlacement = require("../helpers/orderPlacement");
+const { ExchangePairInfo } = require("../helpers/constant");
+const {
+  LastTradedPrice,
+  GetAccount,
+  WalletBalance,
+  PlaceOrder,
+  GetOrderStatus,
+  CancelOrder,
+} = require("../helpers/orderPlacement");
 const spreadBotDetails = require("../models/spreadBotDetails");
 const spreadBotOrders = require("../models/spreadBotOrders");
-const spreadBotMaintainOrders = require("../models/spreadBotMaintainOrders");
-// const commonHelper = require("../helpers/commonHelper");
-// const excel = require("exceljs");
-// const tempfile = require("tempfile");
-const spreadBotGeneratedOrders = require("../models/spreadBotGeneratedOrders");
-const currencies = ["XDC", "SRX", "PLI", "USPLUS", "FXD"];
+const { getSecondaryPair, RedisClient } = require("../services/redis");
+const uuid = require("uuid").v4;
 
 module.exports = {
   addOrder: async (req, res) => {
     try {
       const { exchange, pair, maxOrders, amountBuy, amountSell, percentGap } =
         req.body;
-      const price = await orderPlacement.LastTradedPrice(exchange, pair);
+      const price = await LastTradedPrice(exchange, pair);
       const converter = JSON.parse(await RedisClient.get("converterPrice"));
       const usdtPrice = parseFloat(
         parseFloat(price * converter[getSecondaryPair(pair)].bid[0]).toFixed(6)
       );
-      const orders = await spreadBotDetails.find({
-        pair: { $regex: `${pair.split("-")[0]}` },
-        status: "active",
-        ordersGenerated: true,
-      });
-      const accountData = await orderPlacement.GetAccount(exchange);
-      const walletBalance = await orderPlacement.WalletBalance(
-        exchange,
-        accountData
-      );
+      const accountData = await GetAccount(exchange);
+      const walletBalance = await WalletBalance(exchange, accountData);
       const data1 = walletBalance.filter(
         (e) => e.currency == pair.split("-")[0]
       )[0];
@@ -54,7 +43,7 @@ module.exports = {
         status: "active",
         mappedOrders: [],
         maxOrders,
-        ordersGenerated: orders.length > 0 ? true : false,
+        started: false,
         percentGap: parseFloat(parseFloat(percentGap / 1000).toFixed(4)),
         balanceToBeMaintanedC1: parseFloat(data1.total),
         balanceToBeMaintanedC2: parseFloat(data2.total),
@@ -71,467 +60,192 @@ module.exports = {
     }
   },
 
-  generateOrders: async () => {
+  runBot: async () => {
     try {
-      if (!flags["generateOrders-SBC"]) {
-        flags["generateOrders-SBC"] = true;
-        logger.debug("generating spread bot orders");
-        let i,
-          j,
-          pair,
-          converter,
-          bidPrice,
-          askPrice,
-          baseUsdtPrice,
-          order,
-          usdtPrice,
-          newOrder,
-          uniqueId,
-          checkOrder;
-        for (i = 0; i < currencies.length; i++) {
-          pair = `${currencies[i]}-USDT`;
-          converter = JSON.parse(await RedisClient.get("converterPrice"));
-          bidPrice = converter[pair].ask[0];
-          askPrice = converter[pair].bid[0];
-          baseUsdtPrice = parseFloat(
-            parseFloat((bidPrice + askPrice) / 2).toFixed(6)
-          );
-          order = await spreadBotDetails.findOne({
-            pair: { $regex: `${currencies[i]}` },
-            status: "active",
-            ordersGenerated: false,
-          });
-          if (order) {
-            for (j = 1; j <= 10; j++) {
-              usdtPrice = parseFloat(
-                parseFloat(baseUsdtPrice * (1 + order.percentGap * j)).toFixed(
-                  6
-                )
-              );
-              uniqueId = uuid();
-              newOrder = new spreadBotGeneratedOrders({
-                uniqueId,
-                usdtPrice,
-                currency: currencies[i],
-                type: "sell",
-                status: "active",
-                revOrderId: "",
-                oppOrderId: "",
-                cancelling: false,
-                mappedOrders: [],
-              });
-              newOrder.save();
-              usdtPrice = parseFloat(
-                parseFloat(baseUsdtPrice * (1 - order.percentGap * j)).toFixed(
-                  6
-                )
-              );
-              uniqueId = uuid();
-              newOrder = new spreadBotGeneratedOrders({
-                uniqueId,
-                usdtPrice,
-                currency: currencies[i],
-                type: "buy",
-                status: "active",
-                revOrderId: "",
-                oppOrderId: "",
-                cancelling: false,
-                mappedOrders: [],
-              });
-              newOrder.save();
-            }
-            await spreadBotDetails.updateMany(
-              {
-                pair: { $regex: `${pair.split("-")[0]}` },
-                status: "active",
-                ordersGenerated: false,
-              },
-              { ordersGenerated: true }
-            );
-          }
-          checkOrder = await spreadBotDetails.findOne({
-            pair: { $regex: `${currencies[i]}` },
-            status: "active",
-          });
-          if (!checkOrder) {
-            await spreadBotGeneratedOrders.updateMany(
-              { currency: currencies[i], status: "active" },
-              { status: "cancelled" },
-              { multi: true }
-            );
-          }
-        }
-        flags["generateOrders-SBC"] = false;
-      }
-    } catch (error) {
-      logger.error(`spreadBotController_generateOrders_error`, error);
-      flags["generateOrders-SBC"] = false;
-    }
-  },
+      if (!flags["run-SBC"]) {
+        flags["run-SBC"] = true;
 
-  placeOrders: async () => {
-    try {
-      if (!flags["placeOrders-SBC"]) {
-        flags["placeOrders-SBC"] = true;
-        const orders = await spreadBotDetails.find({ status: "active" });
+        const orders = await spreadBotDetails.find({
+          status: "active",
+          started: false,
+        });
         let i,
           j,
+          basePrice,
+          order,
           exchange,
           pair,
-          generatedOrders,
-          order,
-          currency,
-          converter,
+          amount,
+          type,
           price,
           usdtPrice,
-          amount,
-          generatedOrder,
-          type,
+          orderId,
           total,
           usdtTotal,
-          orderData,
-          orderId,
-          mappingId,
-          refId,
-          mappedOrders,
-          accountData,
-          refOrders,
-          uniqueId,
-          newOrder,
           placedAmountBuy,
           placedAmountSell,
-          totalAmountBuy,
-          totalAmountSell,
-          checkOrder,
-          maxAmount,
-          minAmount;
+          placedTotalBuy,
+          placedTotalSell,
+          mappingId,
+          converter,
+          maxTotal,
+          minTotal,
+          accountData,
+          uniqueId,
+          newOrder,
+          mappedOrders = [];
         for (i = 0; i < orders.length; i++) {
           order = orders[i];
-          mappingId = order.uniqueId;
-          mappedOrders = order.mappedOrders;
+          basePrice = order.price;
           exchange = order.exchange;
           pair = order.pair;
-          currency = pair.split("-")[0];
-          generatedOrders = await spreadBotGeneratedOrders
-            .find({ currency, status: "active" })
-            .sort({ createdAt: -1 });
-          accountData = await orderPlacement.GetAccount(exchange);
+          mappingId = order.uniqueId;
           placedAmountBuy = order.placedAmountBuy;
           placedAmountSell = order.placedAmountSell;
-          totalAmountBuy = order.placedTotalBuy;
-          totalAmountSell = order.placedTotalSell;
-          for (j = 0; j < generatedOrders.length; j++) {
-            generatedOrder = generatedOrders[j];
-            refOrders = generatedOrder.mappedOrders;
-            refId = generatedOrder.uniqueId;
-            checkOrder = await spreadBotOrders.findOne({
+          placedTotalBuy = order.placedTotalBuy;
+          placedTotalSell = order.placedTotalSell;
+          accountData = await GetAccount(exchange);
+          for (j = 1; j <= order.maxOrders; j++) {
+            //sell order
+            price = parseFloat(
+              parseFloat(basePrice * (1 + order.percentGap * j)).toFixed(
+                ExchangePairInfo[exchange][pair].decimalsPrice
+              )
+            );
+            type = "sell";
+            converter = JSON.parse(await RedisClient.get("converterPrice"));
+            usdtPrice = parseFloat(
+              parseFloat(
+                price * converter[getSecondaryPair(pair)].bid[0]
+              ).toFixed(6)
+            );
+            maxTotal = parseFloat(order.amountSell) * 1.05;
+            minTotal = parseFloat(order.amountSell) * 0.95;
+            usdtTotal = parseFloat(
+              parseFloat(
+                Math.random() * (maxTotal - minTotal) + minTotal
+              ).toFixed(4)
+            );
+            amount = parseFloat(
+              parseFloat(usdtTotal / usdtPrice).toFixed(
+                ExchangePairInfo[exchange][pair].decimalsAmount
+              )
+            );
+            total = parseFloat(parseFloat(amount * price).toFixed(4));
+            orderData = {
+              type,
+              amount,
+              price,
+              usdtPrice,
               exchange,
               pair,
-              refId,
-            });
-            if (!checkOrder) {
-              usdtPrice = generatedOrder.usdtPrice;
-              converter = JSON.parse(await RedisClient.get("converterPrice"));
-              usdtPrice = parseFloat(
-                parseFloat(
-                  usdtPrice * (1 - (Math.random() * (1 - 0) + 0) / 1000)
-                ).toFixed(6)
-              );
-              price = parseFloat(
-                parseFloat(
-                  usdtPrice / converter[getSecondaryPair(pair)].bid[0]
-                ).toFixed(ExchangePairInfo[exchange][pair].decimalsPrice)
-              );
-              type = generatedOrder.type;
-              if (order.type == "buy") {
-                maxAmount = parseFloat(order.amountBuy) * 1.05;
-                minAmount = parseFloat(order.amountBuy) * 0.95;
-                // amount = parseFloat(
-                //   parseFloat(
-                //     Math.random() * (maxAmount - minAmount) + minAmount
-                //   ).toFixed(ExchangePairInfo[exchange][pair].decimalsAmount)
-                // );
-              } else {
-                maxAmount = parseFloat(order.amountSell) * 1.05;
-                minAmount = parseFloat(order.amountSell) * 0.95;
-                // amount = parseFloat(
-                //   parseFloat(
-                //     Math.random() * (maxAmount - minAmount) + minAmount
-                //   ).toFixed(ExchangePairInfo[exchange][pair].decimalsAmount)
-                // );
-              }
-              usdtTotal = parseFloat(
-                parseFloat(
-                  Math.random() * (maxAmount - minAmount) + minAmount
-                ).toFixed(4)
-              );
-              amount = parseFloat(
-                parseFloat(usdtTotal / usdtPrice).toFixed(
-                  ExchangePairInfo[exchange][pair].decimalsAmount
-                )
-              );
-              total = parseFloat(parseFloat(amount * price).toFixed(4));
-              // usdtTotal = parseFloat(parseFloat(amount * usdtPrice).toFixed(4));
-              orderData = {
+              total,
+              usdtTotal,
+              ...accountData,
+            };
+            orderId = await PlaceOrder(exchange, orderData);
+            if (orderId != "error") {
+              uniqueId = uuid();
+              newOrder = new spreadBotOrders({
+                uniqueId,
+                originalQty: amount,
                 type,
-                amount,
                 price,
                 usdtPrice,
                 exchange,
                 pair,
                 total,
                 usdtTotal,
-                ...accountData,
-              };
-              orderId = await orderPlacement.PlaceOrder(exchange, orderData);
-              if (orderId != "error" && orderId != "" && orderId != null) {
-                uniqueId = uuid();
-                newOrder = new spreadBotOrders({
-                  uniqueId,
-                  originalQty: amount,
-                  type,
-                  price,
-                  usdtPrice,
-                  exchange,
-                  pair,
-                  total,
-                  usdtTotal,
-                  status: "active",
-                  mappingId,
-                  orderId,
-                  refId,
-                });
-                await newOrder.save();
-                if (type == "buy") {
-                  placedAmountBuy = placedAmountBuy + amount;
-                  totalAmountBuy = totalAmountBuy + usdtTotal;
-                } else {
-                  placedAmountSell = placedAmountSell + amount;
-                  totalAmountSell = totalAmountSell + usdtTotal;
-                }
-                mappedOrders.push(uniqueId);
-                refOrders.push(uniqueId);
-                generatedOrder.mappedOrders = refOrders;
-                generatedOrder.markModified("mappedOrders");
-                generatedOrder.save();
-              }
+                status: "active",
+                mappingId,
+                orderId,
+              });
+              await newOrder.save();
+              placedAmountSell = placedAmountSell + amount;
+              placedTotalSell = placedTotalSell + usdtTotal;
+              mappedOrders.push(uniqueId);
+            }
+
+            //buy order
+            price = parseFloat(
+              parseFloat(basePrice * (1 - order.percentGap * j)).toFixed(
+                ExchangePairInfo[exchange][pair].decimalsPrice
+              )
+            );
+            type = "buy";
+            converter = JSON.parse(await RedisClient.get("converterPrice"));
+            usdtPrice = parseFloat(
+              parseFloat(
+                price * converter[getSecondaryPair(pair)].bid[0]
+              ).toFixed(6)
+            );
+            maxTotal = parseFloat(order.amountBuy) * 1.05;
+            minTotal = parseFloat(order.amountBuy) * 0.95;
+            usdtTotal = parseFloat(
+              parseFloat(
+                Math.random() * (maxTotal - minTotal) + minTotal
+              ).toFixed(4)
+            );
+            amount = parseFloat(
+              parseFloat(usdtTotal / usdtPrice).toFixed(
+                ExchangePairInfo[exchange][pair].decimalsAmount
+              )
+            );
+            total = parseFloat(parseFloat(amount * price).toFixed(4));
+            orderData = {
+              type,
+              amount,
+              price,
+              usdtPrice,
+              exchange,
+              pair,
+              total,
+              usdtTotal,
+              ...accountData,
+            };
+            orderId = await PlaceOrder(exchange, orderData);
+            if (orderId != "error") {
+              uniqueId = uuid();
+              newOrder = new spreadBotOrders({
+                uniqueId,
+                originalQty: amount,
+                type,
+                price,
+                usdtPrice,
+                exchange,
+                pair,
+                total,
+                usdtTotal,
+                status: "active",
+                mappingId,
+                orderId,
+              });
+              await newOrder.save();
+              placedAmountBuy = placedAmountBuy + amount;
+              placedTotalBuy = placedTotalBuy + usdtTotal;
+              mappedOrders.push(uniqueId);
             }
           }
           order.mappedOrders = mappedOrders;
+          order.started = true;
           order.placedAmountBuy = placedAmountBuy;
-          order.placedTotalBuy = totalAmountBuy;
+          order.placedTotalBuy = placedTotalBuy;
           order.placedAmountSell = placedAmountSell;
-          order.placedTotalSell = totalAmountSell;
+          order.placedTotalSell = placedTotalSell;
           order.markModified("placedAmountBuy");
           order.markModified("placedTotalBuy");
           order.markModified("placedAmountSell");
           order.markModified("placedTotalSell");
           order.markModified("mappedOrders");
+          order.markModified("started");
           order.save();
         }
-        flags["placeOrders-SBC"] = false;
+
+        flags["run-SBC"] = false;
       }
     } catch (error) {
-      logger.error(`spreadBotController_placeOrders_error`, error);
-      flags["placeOrders-SBC"] = false;
-    }
-  },
-
-  generateOppOrder: async (refId) => {
-    try {
-      if (!flags[`generateOppOrder-SBC`]) {
-        flags[`generateOppOrder-SBC`] = true;
-
-        const order = await spreadBotGeneratedOrders.findOne({
-          uniqueId: refId,
-        });
-        let type,
-          usdtPrice,
-          oppType,
-          oppUsdtPrice,
-          uniqueId,
-          currency,
-          checkOrder,
-          i,
-          activeOrder;
-        type = order.type;
-        usdtPrice = order.usdtPrice;
-        currency = order.currency;
-        activeOrder = await spreadBotDetails.findOne({
-          pair: { $regex: `${currency}` },
-          status: "active",
-        });
-        if (activeOrder) {
-          if (type == "buy") {
-            oppUsdtPrice = parseFloat(
-              parseFloat(usdtPrice * (1 - 10 * activeOrder.percentGap)).toFixed(
-                6
-              )
-            );
-            oppType = "buy";
-            i = 1;
-            checkOrder = await spreadBotGeneratedOrders.findOne({
-              type: oppType,
-              usdtPrice: oppUsdtPrice,
-              status: "active",
-            });
-            while (checkOrder != null) {
-              oppUsdtPrice = parseFloat(
-                parseFloat(
-                  usdtPrice * (1 - (10 + i) * activeOrder.percentGap)
-                ).toFixed(6)
-              );
-              checkOrder = await spreadBotGeneratedOrders.findOne({
-                type: oppType,
-                usdtPrice: oppUsdtPrice,
-                status: "active",
-              });
-              i++;
-            }
-          } else {
-            oppUsdtPrice = parseFloat(
-              parseFloat(usdtPrice * (1 + 10 * activeOrder.percentGap)).toFixed(
-                6
-              )
-            );
-            oppType = "sell";
-            i = 1;
-            checkOrder = await spreadBotGeneratedOrders.findOne({
-              type: oppType,
-              usdtPrice: oppUsdtPrice,
-              status: "active",
-            });
-            while (checkOrder != null) {
-              oppUsdtPrice = parseFloat(
-                parseFloat(
-                  usdtPrice * (1 + (10 + i) * activeOrder.percentGap)
-                ).toFixed(6)
-              );
-              checkOrder = await spreadBotGeneratedOrders.findOne({
-                type: oppType,
-                usdtPrice: oppUsdtPrice,
-                status: "active",
-              });
-              i++;
-            }
-          }
-          uniqueId = uuid();
-          const newOrder = new spreadBotGeneratedOrders({
-            uniqueId,
-            usdtPrice: oppUsdtPrice,
-            currency,
-            type: oppType,
-            status: "active",
-            revOrderId: "",
-            oppOrderId: "",
-            cancelling: false,
-            mappedOrders: [],
-          });
-          await newOrder.save();
-          await spreadBotGeneratedOrders.findOneAndUpdate(
-            {
-              uniqueId: refId,
-            },
-            {
-              oppOrderId: uniqueId,
-            }
-          );
-        }
-        flags[`generateOppOrder-SBC`] = false;
-      }
-    } catch (error) {
-      logger.error(`spreadBotController_generateOppOrder_error`, error);
-      flags[`generateOppOrder-SBC`] = false;
-    }
-  },
-
-  generateRevOrder: async (refId) => {
-    try {
-      if (!flags[`generateRevOrder-SBC`]) {
-        flags[`generateRevOrder-SBC`] = true;
-
-        const order = await spreadBotGeneratedOrders.findOne({
-          uniqueId: refId,
-        });
-        let type,
-          usdtPrice,
-          revType,
-          revUsdtPrice,
-          uniqueId,
-          currency,
-          checkOrder,
-          i;
-        type = order.type;
-        usdtPrice = order.usdtPrice;
-        currency = order.currency;
-        if (type == "buy") {
-          revUsdtPrice = parseFloat(parseFloat(usdtPrice * 1.01).toFixed(6));
-          revType = "sell";
-          i = 1;
-          checkOrder = await spreadBotGeneratedOrders.findOne({
-            type: revType,
-            usdtPrice: revUsdtPrice,
-            status: "active",
-          });
-          while (checkOrder != null) {
-            revUsdtPrice = parseFloat(
-              parseFloat(usdtPrice * (1.01 + i / 100)).toFixed(6)
-            );
-            checkOrder = await spreadBotGeneratedOrders.findOne({
-              type: revType,
-              usdtPrice: revUsdtPrice,
-              status: "active",
-            });
-            i++;
-          }
-        } else {
-          revUsdtPrice = parseFloat(parseFloat(usdtPrice * 0.99).toFixed(6));
-          revType = "buy";
-          i = 1;
-          checkOrder = await spreadBotGeneratedOrders.findOne({
-            type: revType,
-            usdtPrice: revUsdtPrice,
-            status: "active",
-          });
-          while (checkOrder != null) {
-            revUsdtPrice = parseFloat(
-              parseFloat(usdtPrice * (0.99 - i / 100)).toFixed(6)
-            );
-            checkOrder = await spreadBotGeneratedOrders.findOne({
-              type: revType,
-              usdtPrice: revUsdtPrice,
-              status: "active",
-            });
-            i++;
-          }
-        }
-        uniqueId = uuid();
-        const newOrder = new spreadBotGeneratedOrders({
-          uniqueId,
-          usdtPrice: revUsdtPrice,
-          currency,
-          type: revType,
-          status: "active",
-          revOrderId: "",
-          oppOrderId: "",
-          cancelling: false,
-          mappedOrders: [],
-        });
-        await newOrder.save();
-        await spreadBotGeneratedOrders.findOneAndUpdate(
-          {
-            uniqueId: refId,
-          },
-          {
-            revOrderId: uniqueId,
-          }
-        );
-
-        flags[`generateRevOrder-SBC`] = false;
-      }
-    } catch (error) {
-      logger.error(`spreadBotController_generateOppOrder_error`, error);
-      flags[`generateRevOrder-SBC`] = false;
+      logger.error(`spreadBotController_runBot_error`, error);
+      flags["run-SBC"] = false;
     }
   },
 
@@ -539,9 +253,6 @@ module.exports = {
     try {
       if (!flags[`updateOrders-SBC-${min}`]) {
         flags[`updateOrders-SBC-${min}`] = true;
-        // const orders = await spreadBotOrders
-        //   .find({ status: "active" })
-        //   .sort({ usdtPrice: -1 });
         let i,
           order,
           exchange,
@@ -551,7 +262,6 @@ module.exports = {
           price,
           usdtPrice,
           status,
-          originalQty,
           filledQty,
           orderId,
           orderData,
@@ -565,7 +275,7 @@ module.exports = {
           orderDetails,
           mappingId,
           updatedFilledQty,
-          refId;
+          orderUniqueId;
         for (i = 0; i < orders.length; i++) {
           order = orders[i];
           exchange = order.exchange;
@@ -575,9 +285,8 @@ module.exports = {
           price = order.price;
           usdtPrice = order.usdtPrice;
           prevFilledQty = order.filledQty;
-          originalQty = order.originalQty;
-          refId = order.refId;
-          accountData = await orderPlacement.GetAccount(exchange);
+          orderUniqueId = order.uniqueId;
+          accountData = await GetAccount(exchange);
           orderData = {
             orderId,
             exchange,
@@ -589,7 +298,7 @@ module.exports = {
             usdtPrice: usdtPrice,
             ...accountData,
           };
-          statusData = await orderPlacement.GetOrderStatus(exchange, orderData);
+          statusData = await GetOrderStatus(exchange, orderData);
           status = statusData.status;
           filledQty = parseFloat(statusData.filledQty);
           fees = statusData.fees;
@@ -601,20 +310,6 @@ module.exports = {
           updatedUsdtTotal = parseFloat(
             parseFloat(filledQty * usdtPrice).toFixed(6)
           );
-          //   order.status = status;
-          //   order.filledQty = filledQty;
-          //   order.fees = fees;
-          //   order.feeCurrency = feeCurrency;
-          //   order.feesUSDT = feesUSDT;
-          //   order.updatedTotal = updatedTotal;
-          //   order.updatedUsdtTotal = updatedUsdtTotal;
-          //   order.markModified("status");
-          //   order.markModified("filledQty");
-          //   order.markModified("fees");
-          //   order.markModified("feesUSDT");
-          //   order.markModified("feeCurrency");
-          //   order.markModified("updatedTotal");
-          //   order.markModified("updatedUsdtTotal");
           await spreadBotOrders.findOneAndUpdate(
             {
               uniqueId: order.uniqueId,
@@ -652,20 +347,9 @@ module.exports = {
             }
             orderDetails.save();
             if (status == "completed") {
-              await module.exports.generateRevOrder(refId);
+              await module.exports.placeRevOrder(orderUniqueId);
 
-              await module.exports.generateOppOrder(refId);
-
-              await spreadBotOrders.updateMany(
-                { refId },
-                { cancelling: true },
-                { multi: true }
-              );
-
-              await spreadBotGeneratedOrders.findOneAndUpdate(
-                { uniqueId: refId },
-                { status: "cancelled" }
-              );
+              await module.exports.placeOppOrder(orderUniqueId);
             }
           }
           //   order.save();
@@ -680,6 +364,410 @@ module.exports = {
     }
   },
 
+  placeRevOrder: async (orderUniqueId) => {
+    try {
+      if (!flags[`placeRevOrder-SBC-${orderUniqueId}`]) {
+        flags[`placeRevOrder-SBC-${orderUniqueId}`] = true;
+
+        let i,
+          order,
+          price,
+          type,
+          exchange,
+          pair,
+          revPrice,
+          revAmount,
+          revTotal,
+          revUsdtTotal,
+          revUsdtPrice,
+          minTotal,
+          maxTotal,
+          mappingId,
+          orderDetails,
+          mappedOrders,
+          uniqueId,
+          checkOrder,
+          converter,
+          orderData,
+          orderId,
+          accountData,
+          cancelOrderData,
+          placedAmount,
+          totalAmount;
+        order = await spreadBotOrders.findOne({ uniqueId: orderUniqueId });
+        if (order) {
+          mappingId = order.mappingId;
+          orderDetails = await spreadBotDetails.findOne({
+            uniqueId: mappingId,
+            status: "active",
+          });
+          if (orderDetails) {
+            exchange = order.exchange;
+            pair = order.pair;
+            mappedOrders = orderDetails.mappedOrders;
+            price = order.price;
+            type = order.type;
+            if (type == "buy") {
+              revPrice = parseFloat(
+                parseFloat(price * 1.01).toFixed(
+                  ExchangePairInfo[exchange][pair].decimalsPrice
+                )
+              );
+              revType = "sell";
+              i = 1;
+              maxTotal = parseFloat(orderDetails.amountSell) * 1.05;
+              minTotal = parseFloat(orderDetails.amountSell) * 0.95;
+              checkOrder = await spreadBotOrders.findOne({
+                mappingId,
+                type: revType,
+                price: revPrice,
+                status: "active",
+              });
+              while (checkOrder != null) {
+                revPrice = parseFloat(
+                  parseFloat(price * (1.01 + i / 100)).toFixed(6)
+                );
+                checkOrder = await spreadBotOrders.findOne({
+                  mappingId,
+                  type: revType,
+                  price: revPrice,
+                  status: "active",
+                });
+                i++;
+              }
+            } else {
+              revPrice = parseFloat(
+                parseFloat(price * 0.99).toFixed(
+                  ExchangePairInfo[exchange][pair].decimalsPrice
+                )
+              );
+              revType = "buy";
+              i = 1;
+              maxTotal = parseFloat(orderDetails.amountBuy) * 1.05;
+              minTotal = parseFloat(orderDetails.amountBuy) * 0.95;
+              checkOrder = await spreadBotOrders.findOne({
+                mappingId,
+                type: revType,
+                price: revPrice,
+                status: "active",
+              });
+              while (checkOrder != null) {
+                revPrice = parseFloat(
+                  parseFloat(price * (0.99 - i / 100)).toFixed(6)
+                );
+                checkOrder = await spreadBotOrders.findOne({
+                  mappingId,
+                  type: revType,
+                  price: revPrice,
+                  status: "active",
+                });
+                i++;
+              }
+            }
+            placedAmount =
+              revType == "buy"
+                ? orderDetails.placedAmountBuy
+                : orderDetails.placedAmountSell;
+            totalAmount =
+              revType == "buy"
+                ? orderDetails.placedTotalBuy
+                : orderDetails.placedTotalSell;
+            converter = JSON.parse(await RedisClient.get("converterPrice"));
+            revUsdtPrice = parseFloat(
+              parseFloat(
+                revPrice * converter[getSecondaryPair(pair)].bid[0]
+              ).toFixed(6)
+            );
+            revUsdtTotal = parseFloat(
+              parseFloat(
+                Math.random() * (maxTotal - minTotal) + minTotal
+              ).toFixed(4)
+            );
+            revAmount = parseFloat(
+              parseFloat(revUsdtTotal / revUsdtPrice).toFixed(
+                ExchangePairInfo[exchange][pair].decimalsAmount
+              )
+            );
+            revTotal = parseFloat(parseFloat(revAmount * revPrice).toFixed(4));
+            accountData = await GetAccount(exchange);
+            orderData = {
+              exchange,
+              pair,
+              type: revType,
+              amount: revAmount,
+              price: revPrice,
+              total: revTotal,
+              ...accountData,
+            };
+            orderId = await PlaceOrder(exchange, orderData);
+            if (orderId != "error" && orderId != "" && orderId != null) {
+              uniqueId = uuid();
+
+              const newOrder = new spreadBotOrders({
+                uniqueId,
+                originalQty: revAmount,
+                type: revType,
+                price: revPrice,
+                usdtPrice: revUsdtPrice,
+                exchange,
+                pair,
+                total: revTotal,
+                usdtTotal: revUsdtTotal,
+                status: "active",
+                mappingId,
+                orderId,
+              });
+              await newOrder.save();
+              await spreadBotOrders.findOneAndUpdate(
+                {
+                  uniqueId: orderUniqueId,
+                },
+                {
+                  revOrderId: uniqueId,
+                }
+              );
+              mappedOrders.push(uniqueId);
+              if (revType == "buy") {
+                cancelOrderData = await spreadBotOrders
+                  .find({ status: "active", mappingId, type: "buy" })
+                  .sort({ price: 1 })
+                  .limit(1);
+              } else {
+                cancelOrderData = await spreadBotOrders
+                  .find({ status: "active", mappingId, type: "sell" })
+                  .sort({ price: -1 })
+                  .limit(1);
+              }
+              await spreadBotOrders.findOneAndUpdate(
+                { uniqueId: cancelOrderData[0].uniqueId },
+                { cancelling: true }
+              );
+              placedAmount = placedAmount + revAmount;
+              totalAmount = totalAmount + revUsdtTotal;
+              orderDetails.mappedOrders = mappedOrders;
+              orderDetails.markModified("mappedOrders");
+              if (revType == "buy") {
+                orderDetails.placedAmountBuy = placedAmount;
+                orderDetails.placedTotalBuy = totalAmount;
+                orderDetails.markModified("placedAmountBuy");
+                orderDetails.markModified("placedTotalBuy");
+              } else {
+                orderDetails.placedAmountSell = placedAmount;
+                orderDetails.placedTotalSell = totalAmount;
+                orderDetails.markModified("placedAmountSell");
+                orderDetails.markModified("placedTotalSell");
+              }
+              orderDetails.save();
+            }
+          }
+        }
+
+        flags[`placeRevOrder-SBC-${orderUniqueId}`] = false;
+      }
+    } catch (error) {
+      logger.error(`spreadBotController_placeRevOrder_error`, error);
+      flags[`placeRevOrder-SBC-${orderUniqueId}`] = false;
+    }
+  },
+
+  placeOppOrder: async (orderUniqueId) => {
+    try {
+      if (!flags[`placeOppOrder-SBC-${orderUniqueId}`]) {
+        flags[`placeOppOrder-SBC-${orderUniqueId}`] = true;
+
+        let i,
+          order,
+          price,
+          type,
+          exchange,
+          pair,
+          oppPrice,
+          oppAmount,
+          oppTotal,
+          oppUsdtTotal,
+          oppUsdtPrice,
+          minTotal,
+          maxTotal,
+          mappingId,
+          orderDetails,
+          mappedOrders,
+          uniqueId,
+          checkOrder,
+          converter,
+          orderData,
+          orderId,
+          accountData,
+          placedAmount,
+          totalAmount;
+        order = await spreadBotOrders.findOne({ uniqueId: orderUniqueId });
+        if (order) {
+          mappingId = order.mappingId;
+          orderDetails = await spreadBotDetails.findOne({
+            uniqueId: mappingId,
+            status: "active",
+          });
+          if (orderDetails) {
+            exchange = order.exchange;
+            pair = order.pair;
+            mappedOrders = orderDetails.mappedOrders;
+            price = order.price;
+            type = order.type;
+            if (type == "buy") {
+              oppPrice = parseFloat(
+                parseFloat(
+                  price * (1 - orderDetails.maxOrders * orderDetails.percentGap)
+                ).toFixed(ExchangePairInfo[exchange][pair].decimalsPrice)
+              );
+              oppType = "buy";
+              i = 1;
+              maxTotal = parseFloat(orderDetails.amountBuy) * 1.05;
+              minTotal = parseFloat(orderDetails.amountBuy) * 0.95;
+              checkOrder = await spreadBotOrders.findOne({
+                mappingId,
+                type: oppType,
+                price: oppPrice,
+                status: "active",
+              });
+              while (checkOrder != null) {
+                oppPrice = parseFloat(
+                  parseFloat(
+                    price *
+                      (1 -
+                        (orderDetails.maxOrders + i) * orderDetails.percentGap)
+                  ).toFixed(6)
+                );
+                checkOrder = await spreadBotOrders.findOne({
+                  mappingId,
+                  type: oppType,
+                  price: oppPrice,
+                  status: "active",
+                });
+                i++;
+              }
+            } else {
+              oppPrice = parseFloat(
+                parseFloat(
+                  price * (1 + orderDetails.maxOrders * orderDetails.percentGap)
+                ).toFixed(ExchangePairInfo[exchange][pair].decimalsPrice)
+              );
+              oppType = "sell";
+              i = 1;
+              maxTotal = parseFloat(orderDetails.amountSell) * 1.05;
+              minTotal = parseFloat(orderDetails.amountSell) * 0.95;
+              checkOrder = await spreadBotOrders.findOne({
+                mappingId,
+                type: oppType,
+                price: oppPrice,
+                status: "active",
+              });
+              while (checkOrder != null) {
+                oppPrice = parseFloat(
+                  parseFloat(
+                    price *
+                      (1 +
+                        (orderDetails.maxOrders + i) * orderDetails.percentGap)
+                  ).toFixed(6)
+                );
+                checkOrder = await spreadBotOrders.findOne({
+                  mappingId,
+                  type: oppType,
+                  price: oppPrice,
+                  status: "active",
+                });
+                i++;
+              }
+            }
+            placedAmount =
+              oppType == "buy"
+                ? orderDetails.placedAmountBuy
+                : orderDetails.placedAmountSell;
+            totalAmount =
+              oppType == "buy"
+                ? orderDetails.placedTotalBuy
+                : orderDetails.placedTotalSell;
+            converter = JSON.parse(await RedisClient.get("converterPrice"));
+            oppUsdtPrice = parseFloat(
+              parseFloat(
+                oppPrice * converter[getSecondaryPair(pair)].bid[0]
+              ).toFixed(6)
+            );
+            oppUsdtTotal = parseFloat(
+              parseFloat(
+                Math.random() * (maxTotal - minTotal) + minTotal
+              ).toFixed(4)
+            );
+            oppAmount = parseFloat(
+              parseFloat(oppUsdtTotal / oppUsdtPrice).toFixed(
+                ExchangePairInfo[exchange][pair].decimalsAmount
+              )
+            );
+            oppTotal = parseFloat(parseFloat(oppAmount * oppPrice).toFixed(4));
+            accountData = await GetAccount(exchange);
+            orderData = {
+              exchange,
+              pair,
+              type: oppType,
+              amount: oppAmount,
+              price: oppPrice,
+              total: oppTotal,
+              ...accountData,
+            };
+            orderId = await PlaceOrder(exchange, orderData);
+            if (orderId != "error" && orderId != "" && orderId != null) {
+              uniqueId = uuid();
+
+              const newOrder = new spreadBotOrders({
+                uniqueId,
+                originalQty: oppAmount,
+                type: oppType,
+                price: oppPrice,
+                usdtPrice: oppUsdtPrice,
+                exchange,
+                pair,
+                total: oppTotal,
+                usdtTotal: oppUsdtTotal,
+                status: "active",
+                mappingId,
+                orderId,
+              });
+              await newOrder.save();
+              await spreadBotOrders.findOneAndUpdate(
+                {
+                  uniqueId: orderUniqueId,
+                },
+                {
+                  oppOrderId: uniqueId,
+                }
+              );
+              mappedOrders.push(uniqueId);
+              placedAmount = placedAmount + oppAmount;
+              totalAmount = totalAmount + oppUsdtTotal;
+              orderDetails.mappedOrders = mappedOrders;
+              orderDetails.markModified("mappedOrders");
+              if (oppType == "buy") {
+                orderDetails.placedAmountBuy = placedAmount;
+                orderDetails.placedTotalBuy = totalAmount;
+                orderDetails.markModified("placedAmountBuy");
+                orderDetails.markModified("placedTotalBuy");
+              } else {
+                orderDetails.placedAmountSell = placedAmount;
+                orderDetails.placedTotalSell = totalAmount;
+                orderDetails.markModified("placedAmountSell");
+                orderDetails.markModified("placedTotalSell");
+              }
+              orderDetails.save();
+            }
+          }
+        }
+
+        flags[`placeOppOrder-SBC-${orderUniqueId}`] = false;
+      }
+    } catch (error) {
+      logger.error(`spreadBotController_placeOppOrder_error`, error);
+      flags[`placeOppOrder-SBC-${orderUniqueId}`] = false;
+    }
+  },
+
   updateOrdersMin: async () => {
     try {
       if (!flags[`updateOrdersMin-SBC`]) {
@@ -691,12 +779,22 @@ module.exports = {
         for (i = 0; i < openOrders.length; i++) {
           mappingId = openOrders[i].uniqueId;
           orders = await spreadBotOrders
-            .find({ mappingId, type: "sell", status: "active" })
+            .find({
+              mappingId,
+              type: "sell",
+              status: "active",
+              cancelling: false,
+            })
             .sort({ usdtPrice: 1 })
             .limit(3);
           await module.exports.updateOrders(orders, 1);
           orders = await spreadBotOrders
-            .find({ mappingId, type: "buy", status: "active" })
+            .find({
+              mappingId,
+              type: "buy",
+              status: "active",
+              cancelling: false,
+            })
             .sort({ usdtPrice: -1 })
             .limit(3);
           await module.exports.updateOrders(orders, 1);
@@ -817,7 +915,7 @@ module.exports = {
           price = order.price;
           usdtPrice = order.usdtPrice;
           type = order.type;
-          accountData = await orderPlacement.GetAccount(exchange);
+          accountData = await GetAccount(exchange);
           cancelData = {
             orderId,
             exchange,
@@ -827,7 +925,7 @@ module.exports = {
             usdtPrice: usdtPrice,
             ...accountData,
           };
-          await orderPlacement.CancelOrder(exchange, cancelData);
+          await CancelOrder(exchange, cancelData);
         }
         flags["autoCancel-SBC"] = false;
       }
@@ -837,231 +935,66 @@ module.exports = {
     }
   },
 
-  differenceMail: async () => {
-    try {
-      if (!flags["differenceMail-SBC"]) {
-        flags["differenceMail-SBC"] = true;
-        const orders = await spreadBotDetails.find({
-          status: "active",
-          pair: { $ne: "XDC-USDC" },
-        });
-        let i,
-          order,
-          exchange,
-          pair,
-          currency1,
-          currency2,
-          walletBalance,
-          accountData,
-          curr1Maintain,
-          curr2Maintain,
-          curr1Bal,
-          curr2Bal,
-          curr1BalData,
-          curr2BalData,
-          curr1Diff,
-          curr2Diff,
-          type,
-          price,
-          usdtPrice,
-          amount,
-          book,
-          orderBook,
-          converter,
-          mailMessage = "";
-        for (i = 0; i < orders.length; i++) {
-          order = orders[i];
-          exchange = order.exchange;
-          pair = order.pair;
-          curr1Maintain = order.balanceToBeMaintanedC1;
-          curr2Maintain = order.balanceToBeMaintanedC2;
-          currency1 = pair.split("-")[0];
-          currency2 = pair.split("-")[1];
-          accountData = await orderPlacement.GetAccount(exchange);
-          walletBalance = await orderPlacement.WalletBalance(
-            exchange,
-            accountData
-          );
-          curr1BalData = walletBalance.filter(
-            (e) => e.currency == currency1
-          )[0];
-          curr2BalData = walletBalance.filter(
-            (e) => e.currency == currency2
-          )[0];
-          curr1Bal = parseFloat(curr1BalData.total);
-          curr2Bal = parseFloat(curr2BalData.total);
-          curr1Diff = parseFloat(curr1Bal - curr1Maintain);
-          curr2Diff = parseFloat(curr2Bal - curr2Maintain);
-          if (curr1Diff > 0) {
-            type = "sell";
-          } else if (curr1Diff < 0) {
-            type = "buy";
-          } else {
-            type = "N.A.";
-          }
-          if (type != "N.A.") {
-            amount = parseFloat(
-              parseFloat(Math.abs(curr1Diff)).toFixed(
-                ExchangePairInfo[exchange][pair].decimalsAmount
-              )
-            );
-            book = JSON.parse(await RedisClient.get(`${exchange}__${pair}`));
-            orderBook = parseCompleteOrderBook(exchange, {
-              bid: book.bids,
-              ask: book.asks,
-            });
-            if (type == "buy") {
-              price = parseFloat(
-                parseFloat(orderBook.ask[4][0]).toFixed(
-                  ExchangePairInfo[exchange][pair].decimalsPrice
-                )
-              );
-            } else {
-              price = parseFloat(
-                parseFloat(orderBook.bid[4][0]).toFixed(
-                  ExchangePairInfo[exchange][pair].decimalsPrice
-                )
-              );
-            }
-            converter = JSON.parse(await RedisClient.get("converterPrice"));
-            usdtPrice = parseFloat(
-              parseFloat(
-                price * converter[getSecondaryPair(pair)].bid[0]
-              ).toFixed(6)
-            );
-            mailMessage = `${mailMessage} Action : ${type}<br> Exchange : ${exchange}<br> 
-            Pair : ${pair}<br> Currency : ${currency1}<br> Balance to be Maintained : ${curr1Maintain}<br>
-             Current Balance : ${curr1Bal}<br> Difference Amount : ${amount}<br> Price : ${price}<br>
-             USDT Price : ${usdtPrice}<br><br><br>`;
-          }
-
-          if (!UsdtPairs.includes(pair)) {
-            if (curr2Diff > 0) {
-              type = "sell";
-            } else if (curr2Diff < 0) {
-              type = "buy";
-            } else {
-              type = "N.A.";
-            }
-            if (type != "N.A.") {
-              amount = parseFloat(
-                parseFloat(Math.abs(curr2Diff)).toFixed(
-                  ExchangePairInfo[exchange][pair].decimalsAmount
-                )
-              );
-              book = JSON.parse(await RedisClient.get(`${exchange}__${pair}`));
-              orderBook = parseCompleteOrderBook(exchange, {
-                bid: book.bids,
-                ask: book.asks,
-              });
-              if (type == "buy") {
-                price = parseFloat(
-                  parseFloat(orderBook.ask[4][0]).toFixed(
-                    ExchangePairInfo[exchange][pair].decimalsPrice
-                  )
-                );
-              } else {
-                price = parseFloat(
-                  parseFloat(orderBook.bid[4][0]).toFixed(
-                    ExchangePairInfo[exchange][pair].decimalsPrice
-                  )
-                );
-              }
-              converter = JSON.parse(await RedisClient.get("converterPrice"));
-              usdtPrice = parseFloat(
-                parseFloat(
-                  price * converter[getSecondaryPair(pair)].bid[0]
-                ).toFixed(6)
-              );
-              pair = `${currency2}-USDT`;
-              mailMessage = `${mailMessage} Action : ${type}<br> Exchange : ${exchange}<br> 
-            Pair : ${pair}<br> Currency : ${currency2}<br> Balance to be Maintained : ${curr2Maintain}<br>
-             Current Balance : ${curr2Bal}<br> Difference Amount : ${amount}<br> Price : ${price}<br>
-             USDT Price : ${usdtPrice}<br><br><br>`;
-            }
-          }
-        }
-        // if (mailMessage != "") {
-        //   const emails = await commonHelper.getEmailsForMail(1);
-        //   await mail.send(emails, "1 Hr Difference", mailMessage);
-        // }
-        flags["differenceMail-SBC"] = false;
-      }
-    } catch (error) {
-      logger.error(`spreadBotController_differenceMail_error`, error);
-      flags["differenceMail-SBC"] = false;
-    }
-  },
-
   checkOrderNumbers: async () => {
     try {
       if (!flags["checkOrderNumbers-SBC"]) {
         flags["checkOrderNumbers-SBC"] = true;
-
-        let i, j, orders, cancelOrders, currency, difference, refId;
-        for (i = 0; i < currencies.length; i++) {
-          currency = currencies[i];
-          orders = await spreadBotGeneratedOrders.find({
-            currency,
+        const orders = await spreadBotDetails.find({ status: "active" });
+        let i,
+          j,
+          order,
+          maxOrders,
+          currentOrders,
+          difference,
+          openOrders,
+          mappingId,
+          cancelOrdersData;
+        for (i = 0; i < orders.length; i++) {
+          order = orders[i];
+          maxOrders = order.maxOrders;
+          mappingId = order.uniqueId;
+          openOrders = await spreadBotOrders.find({
             status: "active",
-            type: "sell",
+            cancelling: false,
+            mappingId,
+            type: "buy",
           });
-          if (orders.length > 10) {
-            difference = orders.length - 10;
-            cancelOrders = await spreadBotGeneratedOrders
-              .find({
-                currency,
-                status: "active",
-                type: "sell",
-              })
-              .sort({ usdtPrice: -1 })
+          currentOrders = openOrders.length;
+          if (maxOrders < currentOrders) {
+            difference = currentOrders - maxOrders;
+            cancelOrdersData = await spreadBotOrders
+              .find({ status: "active", mappingId, type: "buy" })
+              .sort({ price: 1 })
               .limit(difference);
-            for (j = 0; j < cancelOrders.length; j++) {
-              refId = cancelOrders[j].uniqueId;
-              await spreadBotOrders.updateMany(
-                { refId },
-                { cancelling: true },
-                { multi: true }
-              );
-
-              await spreadBotGeneratedOrders.findOneAndUpdate(
-                { uniqueId: refId },
-                { status: "cancelled" }
+            for (j = 0; j < cancelOrdersData.length; j++) {
+              await spreadBotOrders.findOneAndUpdate(
+                { uniqueId: cancelOrdersData[j].uniqueId },
+                { cancelling: true }
               );
             }
           }
 
-          orders = await spreadBotGeneratedOrders.find({
-            currency,
+          openOrders = await spreadBotOrders.find({
             status: "active",
-            type: "buy",
+            cancelling: false,
+            mappingId,
+            type: "sell",
           });
-          if (orders.length > 10) {
-            difference = orders.length - 10;
-            cancelOrders = await spreadBotGeneratedOrders
-              .find({
-                currency,
-                status: "active",
-                type: "buy",
-              })
-              .sort({ usdtPrice: 1 })
+          currentOrders = openOrders.length;
+          if (maxOrders < currentOrders) {
+            difference = currentOrders - maxOrders;
+            cancelOrdersData = await spreadBotOrders
+              .find({ status: "active", mappingId, type: "sell" })
+              .sort({ price: -1 })
               .limit(difference);
-            for (j = 0; j < cancelOrders.length; j++) {
-              refId = cancelOrders[j].uniqueId;
-              await spreadBotOrders.updateMany(
-                { refId },
-                { cancelling: true },
-                { multi: true }
-              );
-
-              await spreadBotGeneratedOrders.findOneAndUpdate(
-                { uniqueId: refId },
-                { status: "cancelled" }
+            for (j = 0; j < cancelOrdersData.length; j++) {
+              await spreadBotOrders.findOneAndUpdate(
+                { uniqueId: cancelOrdersData[j].uniqueId },
+                { cancelling: true }
               );
             }
           }
         }
-
         flags["checkOrderNumbers-SBC"] = false;
       }
     } catch (error) {
@@ -1249,6 +1182,41 @@ module.exports = {
     } catch (error) {
       logger.error(`spreadBotController_getOrderDetails_error`, error);
       return responseHelper.serverError(res, error);
+    }
+  },
+
+  placeFailedOrders: async () => {
+    try {
+      if (!flags["placeFailed-SBC"]) {
+        flags["placeFailed-SBC"] = true;
+        const orders = await spreadBotOrders.find({
+          status: "completed",
+          $or: [{ revOrderId: "" }, { oppOrderId: "" }],
+        });
+        let i, order, revOrderId, oppOrderId, mappingId, orderDetails;
+        for (i = 0; i < orders.length; i++) {
+          order = orders[i];
+          mappingId = order.mappingId;
+          orderDetails = await spreadBotDetails.findOne({
+            status: "active",
+            uniqueId: mappingId,
+          });
+          if (orderDetails) {
+            revOrderId = order.revOrderId;
+            oppOrderId = order.oppOrderId;
+            if (revOrderId == "") {
+              await module.exports.placeRevOrder(order.uniqueId);
+            }
+            if (oppOrderId == "") {
+              await module.exports.placeOppOrder(order.uniqueId);
+            }
+          }
+        }
+        flags["placeFailed-SBC"] = false;
+      }
+    } catch (error) {
+      logger.error(`spreadBotController_placeFailedOrders_error`, error);
+      flags["placeFailed-SBC"] = false;
     }
   },
 };

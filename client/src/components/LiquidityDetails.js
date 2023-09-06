@@ -127,11 +127,15 @@ class LiquidityDetails extends Component {
     this.props.getLiquidityOrderDetails({
       uniqueId: this.props.params.uniqueId,
     });
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.props.getLiquidityOrderDetails({
         uniqueId: this.props.params.uniqueId,
       });
     }, 1000 * 60 * 2);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   componentDidUpdate(prevProps) {
