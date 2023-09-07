@@ -90,154 +90,155 @@ module.exports = {
 
       const converter = JSON.parse(await RedisClient.get("converterPrice"));
 
-      const accounts = ["AB", "VB"];
       const exchangesData = await ExchangeCurrencies.find({});
       for (i = 0; i < exchangesData.length; i++) {
         exchange = exchangesData[i].exchange;
         (walletData = []), (oldData = ""), (statsArray = []);
         account = await orderPlacement.GetAccount(exchange);
-        walletData = await orderPlacement.WalletBalance(exchange, account);
-        oldData = await dailyWalletBalances.findOne({
-          exchange: exchange,
-          account: "",
-          time: time,
-        });
+        if (account) {
+          walletData = await orderPlacement.WalletBalance(exchange, account);
+          oldData = await dailyWalletBalances.findOne({
+            exchange: exchange,
+            account: "",
+            time: time,
+          });
 
-        yesterdayData = await dailyWalletBalances.findOne({
-          exchange: exchange,
-          account: "",
-          time: yesterday,
-        });
+          yesterdayData = await dailyWalletBalances.findOne({
+            exchange: exchange,
+            account: "",
+            time: yesterday,
+          });
 
-        if (oldData == "" || oldData == null) {
-          (
-            await new dailyWalletBalances({
-              account: "",
-              exchange,
-              currency: walletData,
-              time,
-            })
-          ).save();
-        } else {
-          await dailyWalletBalances.updateOne(
-            {
-              exchange: exchange,
-              account: "",
-              time: time,
-            },
-            {
-              $set: {
+          if (oldData == "" || oldData == null) {
+            (
+              await new dailyWalletBalances({
+                account: "",
+                exchange,
                 currency: walletData,
+                time,
+              })
+            ).save();
+          } else {
+            await dailyWalletBalances.updateOne(
+              {
+                exchange: exchange,
+                account: "",
+                time: time,
               },
+              {
+                $set: {
+                  currency: walletData,
+                },
+              }
+            );
+          }
+
+          for (k = 0; k < walletData.length; k++) {
+            if (
+              totalBalances[walletData[k].currency] &&
+              "balance" in totalBalances[walletData[k].currency] &&
+              totalBalances[walletData[k].currency]["balance"] != null
+            ) {
+              balance = totalBalances[walletData[k].currency]["balance"];
+            } else {
+              balance = 0;
             }
-          );
-        }
+            if (
+              totalBalances[walletData[k].currency] &&
+              "inTrade" in totalBalances[walletData[k].currency] &&
+              totalBalances[walletData[k].currency]["inTrade"] != null
+            ) {
+              inTrade = totalBalances[walletData[k].currency]["inTrade"];
+            } else {
+              inTrade = 0;
+            }
+            if (
+              totalBalances[walletData[k].currency] &&
+              "total" in totalBalances[walletData[k].currency] &&
+              totalBalances[walletData[k].currency]["total"] != null
+            ) {
+              total = totalBalances[walletData[k].currency]["total"];
+            } else {
+              total = 0;
+            }
 
-        for (k = 0; k < walletData.length; k++) {
-          if (
-            totalBalances[walletData[k].currency] &&
-            "balance" in totalBalances[walletData[k].currency] &&
-            totalBalances[walletData[k].currency]["balance"] != null
-          ) {
-            balance = totalBalances[walletData[k].currency]["balance"];
-          } else {
-            balance = 0;
-          }
-          if (
-            totalBalances[walletData[k].currency] &&
-            "inTrade" in totalBalances[walletData[k].currency] &&
-            totalBalances[walletData[k].currency]["inTrade"] != null
-          ) {
-            inTrade = totalBalances[walletData[k].currency]["inTrade"];
-          } else {
-            inTrade = 0;
-          }
-          if (
-            totalBalances[walletData[k].currency] &&
-            "total" in totalBalances[walletData[k].currency] &&
-            totalBalances[walletData[k].currency]["total"] != null
-          ) {
-            total = totalBalances[walletData[k].currency]["total"];
-          } else {
-            total = 0;
-          }
+            if (!totalBalances[walletData[k].currency]) {
+              totalBalances[walletData[k].currency] = {};
+            }
 
-          if (!totalBalances[walletData[k].currency]) {
-            totalBalances[walletData[k].currency] = {};
-          }
+            totalBalances[walletData[k].currency].currency =
+              walletData[k].currency;
+            totalBalances[walletData[k].currency].balance =
+              walletData[k].balance + balance;
+            totalBalances[walletData[k].currency].inTrade =
+              walletData[k].inTrade + inTrade;
+            totalBalances[walletData[k].currency].total =
+              walletData[k].total + total;
 
-          totalBalances[walletData[k].currency].currency =
-            walletData[k].currency;
-          totalBalances[walletData[k].currency].balance =
-            walletData[k].balance + balance;
-          totalBalances[walletData[k].currency].inTrade =
-            walletData[k].inTrade + inTrade;
-          totalBalances[walletData[k].currency].total =
-            walletData[k].total + total;
-
-          if (yesterdayData && yesterdayData != "") {
-            for (l = 0; l < yesterdayData.currency.length; l++) {
-              stats = {};
-              if (
-                yesterdayData.currency[l].currency == walletData[k].currency
-              ) {
-                stats.currency = walletData[k].currency;
-                stats.yesterdayBalance = yesterdayData.currency[l].total;
-                stats.todayBalance = walletData[k].total;
-                stats.balanceChange = parseFloat(
-                  parseFloat(
-                    stats.todayBalance - stats.yesterdayBalance
-                  ).toFixed(4)
-                );
-                if (`${stats.currency}-USDT` in converter)
-                  stats.diffUSDT =
-                    stats.balanceChange *
-                    converter[`${stats.currency}-USDT`].bid[0];
-                else {
-                  stats.diffUSDT = stats.balanceChange * 0;
-                  logger.error(`bid not found`, stats.currency);
+            if (yesterdayData && yesterdayData != "") {
+              for (l = 0; l < yesterdayData.currency.length; l++) {
+                stats = {};
+                if (
+                  yesterdayData.currency[l].currency == walletData[k].currency
+                ) {
+                  stats.currency = walletData[k].currency;
+                  stats.yesterdayBalance = yesterdayData.currency[l].total;
+                  stats.todayBalance = walletData[k].total;
+                  stats.balanceChange = parseFloat(
+                    parseFloat(
+                      stats.todayBalance - stats.yesterdayBalance
+                    ).toFixed(4)
+                  );
+                  if (`${stats.currency}-USDT` in converter)
+                    stats.diffUSDT =
+                      stats.balanceChange *
+                      converter[`${stats.currency}-USDT`].bid[0];
+                  else {
+                    stats.diffUSDT = stats.balanceChange * 0;
+                    logger.error(`bid not found`, stats.currency);
+                  }
+                  if (stats.balanceChange >= 0) {
+                    stats.type = "profit";
+                  } else {
+                    stats.type = "loss";
+                  }
                 }
-                if (stats.balanceChange >= 0) {
-                  stats.type = "profit";
-                } else {
-                  stats.type = "loss";
+                if (Object.keys(stats).length > 0) {
+                  statsArray.push(stats);
                 }
               }
-              if (Object.keys(stats).length > 0) {
-                statsArray.push(stats);
-              }
             }
           }
-        }
 
-        statsData = await dailyStats.findOne({
-          exchange,
-          account: "",
-          time,
-        });
+          statsData = await dailyStats.findOne({
+            exchange,
+            account: "",
+            time,
+          });
 
-        if (statsData == "" || statsData == null) {
-          (
-            await new dailyStats({
-              exchange,
-              account: "",
-              stats: statsArray,
-              time,
-            })
-          ).save();
-        } else {
-          await dailyStats.updateOne(
-            {
-              exchange,
-              account: "",
-              time,
-            },
-            {
-              $set: {
+          if (statsData == "" || statsData == null) {
+            (
+              await new dailyStats({
+                exchange,
+                account: "",
                 stats: statsArray,
+                time,
+              })
+            ).save();
+          } else {
+            await dailyStats.updateOne(
+              {
+                exchange,
+                account: "",
+                time,
               },
-            }
-          );
+              {
+                $set: {
+                  stats: statsArray,
+                },
+              }
+            );
+          }
         }
       }
 
