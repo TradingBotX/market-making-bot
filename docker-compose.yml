@@ -4,7 +4,7 @@ services:
     image: mongo:latest
     container_name: mongodb-container
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
     volumes:
       - mongodb-data:/data/db
     logging:
@@ -14,7 +14,7 @@ services:
     image: redis:latest
     container_name: redis-container
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     logging:
       driver: none
 
