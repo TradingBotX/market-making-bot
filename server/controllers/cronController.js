@@ -295,9 +295,14 @@ module.exports = {
                   4
                 )
               );
-              stats.diffUSDT =
-                stats.balanceChange *
-                converter[`${stats.currency}-USDT`].bid[0];
+              if (`${stats.currency}-USDT` in converter)
+                stats.diffUSDT =
+                  stats.balanceChange *
+                  converter[`${stats.currency}-USDT`].bid[0];
+              else {
+                stats.diffUSDT = stats.balanceChange * 0;
+                logger.error(`bid not found`, stats.currency);
+              }
               if (stats.balanceChange >= 0) {
                 stats.type = "profit";
               } else {
