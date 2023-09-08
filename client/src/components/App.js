@@ -41,10 +41,10 @@ class App extends React.Component {
           {/* <Route exact path="/signup" component={SignUp} /> */}
           <Route exact path="/login" component={Login} />
           {/* <Route exact path="/chart" component={LineChart} /> */}
-          <Route exact path="/monitor" component={Monitor} />
+          {/* <Route exact path="/monitor" component={Monitor} /> */}
           <Route exact path="/management" component={Management} />
-          <Route exact path="/admin-management" component={AdminManagement} />
-          <Route exact path="/admin-profile" component={AdminProfile} />
+          {/* <Route exact path="/admin-management" component={AdminManagement} /> */}
+          {/* <Route exact path="/admin-profile" component={AdminProfile} /> */}
           <Route exact path="/daily-stats" component={DailyStats} />
           <Route exact path="/liquidity" component={Liquidity} />
           <Route exact path="/manage-keys" component={ManageKeys} />

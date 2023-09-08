@@ -92,14 +92,14 @@ class Sidebar extends React.Component {
             this.setState({ activeLink: "/manage-keys" })
           )}
 
-          {this.renderRouteButton(
+          {/* {this.renderRouteButton(
             "Admin Profile",
             faUserCog,
             "/admin-profile",
             () => {
               this.setState({ activeLink: "/admin-profile" });
             }
-          )}
+          )} */}
 
           {this.renderRouteButton(
             "Daily Stats",
@@ -110,7 +110,7 @@ class Sidebar extends React.Component {
             }
           )}
 
-          <SuperAdminComponent
+          {/* <SuperAdminComponent
             element={this.renderRouteButton(
               "Admin",
               faUserLock,
@@ -119,11 +119,11 @@ class Sidebar extends React.Component {
                 this.setState({ activeLink: "/admin-management" });
               }
             )}
-          />
+          /> */}
 
-          {this.renderRouteButton("Monitor", faChartArea, "/monitor", () => {
+          {/* {this.renderRouteButton("Monitor", faChartArea, "/monitor", () => {
             this.setState({ activeLink: "/monitor" });
-          })}
+          })} */}
         </div>
 
         <div>

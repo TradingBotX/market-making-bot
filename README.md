@@ -59,9 +59,6 @@ When engaging in cryptocurrency trading, you are entering dynamic markets where 
   When starting the bot will consider the current price of the base currency in USDT and then place 10 orders on each side by maintaining the percent of gap set between each order starting from the current price. The amount will be calculated based on the USDT amount mentioned for the orders. If an order is completed on either side on any of the exchange, the bot will generate new orders and update the orders on all the exchanges, by placing and canceling required orders, where the bot is active for that given base currency.
 
 ## Steps to Start the Bot
-
-To restrict site access to only the local environment, utilize `localhost:port` in the `.env` files for both the client and server components, where `port` refers to the specific port numbers you're using. If your intention is to access the site remotely, replace `localhost:port` with `your_ip:port` in both `.env` files, again using the appropriate IP address and port number. Once you've configured these settings, proceed to initiate the applications. This will guarantee smooth operation, whether you're accessing the applications locally or remotely.
-
 ### TradingBotX Setup Prerequisites:
 
   * **Operating System (OS):** Linux-based operating systems (recommended for stability and security). Ubuntu 20.04 LTS or later versions are highly recommended. Windows and macOS can also be used with certain configurations but may have limitations.
@@ -83,6 +80,8 @@ Follow these steps to get the project up and running:
 
 2. **Configure Environment Variables:**  
     Please ensure to update the `.env` files situated in both the client and server directories. To assist you in this process, you can refer to the provided `.env.example` files. Insert the required values that are pertinent to your environment. Please be aware that we have also made modifications to the server `.env.example` file to meet the requisites for Docker images.
+
+    To restrict site access to only the local environment, utilize `localhost:port` in the `.env` files for both the client and server components, where `port` refers to the specific port numbers you're using. If your intention is to access the site remotely, replace `localhost:port` with `your_ip:port` in both `.env` files, again using the appropriate IP address and port number. Once you've configured these settings, proceed to initiate the applications. This will guarantee smooth operation, whether you're accessing the applications locally or remotely.
 
 3. Navigate to the directory containing the `docker-compose.yml` file.
 
@@ -141,6 +140,9 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
 
     Kindly note that the current `.env.example` file for the server aligns with Docker configurations. In light of this, kindly substitute the `MONGO_URL` with your individual connection string. Furthermore, within the `REDIS_HOST`, use the remote IP address for remote Redis, or if utilizing a locally installed Redis, input `localhost`. This ensures proper configuration for your Redis instance.
 
+    To restrict site access to only the local environment, utilize `localhost:port` in the `.env` files for both the client and server components, where `port` refers to the specific port numbers you're using. If your intention is to access the site remotely, replace `localhost:port` with `your_ip:port` in both `.env` files, again using the appropriate IP address and port number. Once you've configured these settings, proceed to initiate the applications. This will guarantee smooth operation, whether you're accessing the applications locally or remotely.
+
+
 4. **Start the Server:**  
     Launch the server using the following command to start the application with nodemon:  
   
@@ -157,7 +159,7 @@ Prerequisites : [Node v16](https://nodejs.org/en/blog/release/v16.16.0), [MongoD
 
 ### Access the client and server to access the bot:  
 
-  Upon initializing the server for the first time, an email and password will be generated for you. This information will be displayed in the command prompt and saved in the `/server/helpers/creds.json` file. We strongly advise you to empty the file after copying the credentials to ensure security. Safely storing this information is of utmost importance, as it will be essential for your future login via the client interface. If the need arises to reset the user, you can achieve this by modifying the `RESET_ADMIN` variable in the server's `.env` file to true. Once the necessary changes are made, remember to set the variable back to false.  
+  Upon initializing the server for the first time, an email and password will be generated for you. This information will be displayed in the command prompt and saved in the `/server/helpers/creds.json` file. We strongly advise you to empty the file after copying the credentials to ensure security. Safely storing this information is of utmost importance, as it will be essential for your future login via the client interface. If the need arises to reset the user, you can achieve this by modifying the `RESET_ADMIN` variable in the server's `.env` file to `true`. Once the necessary changes are made, remember to set the variable back to `false`.  
 
   For local access, reach the React app through [http://localhost:3000](http://localhost:3000) and the Node.js app via [http://localhost:5000](http://localhost:5000). To access them over the web, access the React app at http://yourip:3000 and the Node.js app at http://yourip:5000, replacing "yourip" with the appropriate IP address. 
 
