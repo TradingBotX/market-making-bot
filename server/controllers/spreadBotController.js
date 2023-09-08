@@ -226,19 +226,17 @@ module.exports = {
               mappedOrders.push(uniqueId);
             }
           }
-          order.mappedOrders = mappedOrders;
-          order.started = true;
-          order.placedAmountBuy = placedAmountBuy;
-          order.placedTotalBuy = placedTotalBuy;
-          order.placedAmountSell = placedAmountSell;
-          order.placedTotalSell = placedTotalSell;
-          order.markModified("placedAmountBuy");
-          order.markModified("placedTotalBuy");
-          order.markModified("placedAmountSell");
-          order.markModified("placedTotalSell");
-          order.markModified("mappedOrders");
-          order.markModified("started");
-          order.save();
+          await spreadBotDetails.findOneAndUpdate(
+            { uniqueId: mappingId },
+            {
+              started: true,
+              mappedOrders,
+              placedAmountBuy,
+              placedTotalBuy,
+              placedAmountSell,
+              placedTotalSell,
+            }
+          );
         }
 
         flags["run-SBC"] = false;
@@ -327,25 +325,23 @@ module.exports = {
           if (filledQty > prevFilledQty) {
             updatedFilledQty = filledQty - prevFilledQty;
             mappingId = order.mappingId;
-            orderDetails = await spreadBotDetails.findOne({
-              uniqueId: mappingId,
-            });
             if (type == "buy") {
-              orderDetails.filledAmountBuy =
-                orderDetails.filledAmountBuy + updatedFilledQty;
-              orderDetails.updatedTotalBuy =
-                orderDetails.updatedTotalBuy + usdtPrice * updatedFilledQty;
-              orderDetails.markModified("filledAmountBuy");
-              orderDetails.markModified("updatedTotalBuy");
+              await spreadBotDetails.findOneAndUpdate(
+                { uniqueId: mappingId },
+                {
+                  filledAmountBuy: updatedFilledQty,
+                  updatedTotalBuy: usdtPrice * updatedFilledQty,
+                }
+              );
             } else {
-              orderDetails.filledAmountSell =
-                orderDetails.filledAmountSell + updatedFilledQty;
-              orderDetails.updatedTotalSell =
-                orderDetails.updatedTotalSell + usdtPrice * updatedFilledQty;
-              orderDetails.markModified("filledAmountSell");
-              orderDetails.markModified("updatedTotalSell");
+              await spreadBotDetails.findOneAndUpdate(
+                { uniqueId: mappingId },
+                {
+                  filledAmountSell: updatedFilledQty,
+                  updatedTotalSell: usdtPrice * updatedFilledQty,
+                }
+              );
             }
-            orderDetails.save();
             if (status == "completed") {
               await module.exports.placeRevOrder(orderUniqueId);
 
@@ -544,20 +540,25 @@ module.exports = {
               );
               placedAmount = placedAmount + revAmount;
               totalAmount = totalAmount + revUsdtTotal;
-              orderDetails.mappedOrders = mappedOrders;
-              orderDetails.markModified("mappedOrders");
               if (revType == "buy") {
-                orderDetails.placedAmountBuy = placedAmount;
-                orderDetails.placedTotalBuy = totalAmount;
-                orderDetails.markModified("placedAmountBuy");
-                orderDetails.markModified("placedTotalBuy");
+                await spreadBotDetails.findOneAndUpdate(
+                  { uniqueId: mappingId },
+                  {
+                    placedAmountBuy: placedAmount,
+                    placedTotalBuy: totalAmount,
+                    mappedOrders,
+                  }
+                );
               } else {
-                orderDetails.placedAmountSell = placedAmount;
-                orderDetails.placedTotalSell = totalAmount;
-                orderDetails.markModified("placedAmountSell");
-                orderDetails.markModified("placedTotalSell");
+                await spreadBotDetails.findOneAndUpdate(
+                  { uniqueId: mappingId },
+                  {
+                    placedAmountSell: placedAmount,
+                    placedTotalSell: totalAmount,
+                    mappedOrders,
+                  }
+                );
               }
-              orderDetails.save();
             }
           }
         }
@@ -742,20 +743,25 @@ module.exports = {
               mappedOrders.push(uniqueId);
               placedAmount = placedAmount + oppAmount;
               totalAmount = totalAmount + oppUsdtTotal;
-              orderDetails.mappedOrders = mappedOrders;
-              orderDetails.markModified("mappedOrders");
               if (oppType == "buy") {
-                orderDetails.placedAmountBuy = placedAmount;
-                orderDetails.placedTotalBuy = totalAmount;
-                orderDetails.markModified("placedAmountBuy");
-                orderDetails.markModified("placedTotalBuy");
+                await spreadBotDetails.findOneAndUpdate(
+                  { uniqueId: mappingId },
+                  {
+                    placedAmountBuy: placedAmount,
+                    placedTotalBuy: totalAmount,
+                    mappedOrders,
+                  }
+                );
               } else {
-                orderDetails.placedAmountSell = placedAmount;
-                orderDetails.placedTotalSell = totalAmount;
-                orderDetails.markModified("placedAmountSell");
-                orderDetails.markModified("placedTotalSell");
+                await spreadBotDetails.findOneAndUpdate(
+                  { uniqueId: mappingId },
+                  {
+                    placedAmountSell: placedAmount,
+                    placedTotalSell: totalAmount,
+                    mappedOrders,
+                  }
+                );
               }
-              orderDetails.save();
             }
           }
         }
