@@ -40,11 +40,11 @@ class Header extends Component {
             to={"/login"}
             value={<Nav.Link>Log In</Nav.Link>}
           />
-          <RouteButton
+          {/* <RouteButton
             className="u-back-light"
             to={"/signup"}
             value={<Nav.Link>Sign Up</Nav.Link>}
-          />
+          /> */}
         </Nav>
       </div>
     );
@@ -120,8 +120,8 @@ class Header extends Component {
                 ? this.renderAccount()
                 : this.renderLogin()
               : initialAuth == "true"
-                ? this.renderAccount()
-                : this.renderLogin()}
+              ? this.renderAccount()
+              : this.renderLogin()}
           </Navbar.Collapse>
         </Navbar>
       </div>

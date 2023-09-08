@@ -62,7 +62,15 @@ When engaging in cryptocurrency trading, you are entering dynamic markets where 
 
 To restrict site access to only the local environment, utilize `localhost:port` in the `.env` files for both the client and server components, where `port` refers to the specific port numbers you're using. If your intention is to access the site remotely, replace `localhost:port` with `your_ip:port` in both `.env` files, again using the appropriate IP address and port number. Once you've configured these settings, proceed to initiate the applications. This will guarantee smooth operation, whether you're accessing the applications locally or remotely.
 
+### TradingBotX Setup Prerequisites:
+
+  * **Operating System (OS):** Linux-based operating systems (recommended for stability and security). Ubuntu 20.04 LTS or later versions are highly recommended. Windows and macOS can also be used with certain configurations but may have limitations.
+
+  * **RAM (Random Access Memory):** A minimum of 8GB RAM is recommended for smooth operation. However, for optimal performance and handling larger datasets, 16GB or more is advisable
+
 ### Method 1 : Docker Setup
+
+Prerequisites : [Docker](https://docs.docker.com/engine/install/) 
 
 Follow these steps to get the project up and running:
 
@@ -85,9 +93,21 @@ Follow these steps to get the project up and running:
     docker-compose up
     ```
 
-5. For local access, reach the React app through [http://localhost:3000](http://localhost:3000) and the Node.js app via [http://localhost:5000](http://localhost:5000). To access them over the web, access the React app at http://yourip:3000 and the Node.js app at http://yourip:5000, replacing "yourip" with the appropriate IP address.
+5. After starting the services, the login credentials will be printed on the terminal where you started the services, please use that for login. 
 
-6. To stop the services, press `Ctrl + C` in the terminal where you started the services, and then remove the containers:
+   If you forget to save your credentials from the Docker terminal, you can use either of the two following commands to recover them. If, for some Windows devices, the first command (bash command) doesn't work, please resort to the second command to retrieve and display your login credentials in the terminal.
+
+   ```bash
+   bash getLogins.sh
+   ```
+
+   ```bash
+   docker exec -it nodejs-api-container cat /usr/src/app/helpers/creds.json
+   ```
+
+6. For local access, reach the React app through [http://localhost:3000](http://localhost:3000) and the Node.js app via [http://localhost:5000](http://localhost:5000). To access them over the web, access the React app at http://yourip:3000 and the Node.js app at http://yourip:5000, replacing "yourip" with the appropriate IP address.
+
+7. To stop the services, press `Ctrl + C` in the terminal where you started the services, and then remove the containers:
 
     ```bash
     docker-compose down

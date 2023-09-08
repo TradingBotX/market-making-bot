@@ -38,7 +38,7 @@ class App extends React.Component {
       return (
         <Switch>
           <Route exact path="/" component={Dashboard} />
-          <Route exact path="/signup" component={SignUp} />
+          {/* <Route exact path="/signup" component={SignUp} /> */}
           <Route exact path="/login" component={Login} />
           {/* <Route exact path="/chart" component={LineChart} /> */}
           <Route exact path="/monitor" component={Monitor} />
@@ -60,7 +60,7 @@ class App extends React.Component {
         <>
           <Switch>
             <Route exact path="/" component={Dashboard} />
-            <Route exact path="/signup" component={SignUp} />
+            {/* <Route exact path="/signup" component={SignUp} /> */}
             <Route exact path="/login" component={Login} />
             <Redirect from="*" to="/" />
           </Switch>
