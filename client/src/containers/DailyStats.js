@@ -108,29 +108,29 @@ export class DailyStats extends Component {
     for (let i = 0; i < allData.length; i++) {
       let data = allData[i];
 
-      // if (data.account.includes("AB")) {
-      if (!data.stats.length) {
-        obj = {
-          exchange: data.exchange,
-          // amount: data.account,
-          currency: "No Data Available",
-        };
-        returnData.push(obj);
-      } else {
-        for (let j = 0; j < data.stats.length; j++) {
+      if (!data.account.includes("total")) {
+        if (!data.stats.length) {
           obj = {
             exchange: data.exchange,
             // amount: data.account,
-            currency: data.stats[j].currency,
-            yesterday: data.stats[j].yesterdayBalance,
-            today: data.stats[j].todayBalance,
-            diff: data.stats[j].balanceChange,
-            diffUSDT: data.stats[j].diffUSDT || 0,
+            currency: "No Data Available",
           };
           returnData.push(obj);
+        } else {
+          for (let j = 0; j < data.stats.length; j++) {
+            obj = {
+              exchange: data.exchange,
+              // amount: data.account,
+              currency: data.stats[j].currency,
+              yesterday: data.stats[j].yesterdayBalance,
+              today: data.stats[j].todayBalance,
+              diff: data.stats[j].balanceChange,
+              diffUSDT: data.stats[j].diffUSDT || 0,
+            };
+            returnData.push(obj);
+          }
         }
       }
-      // }
     }
     return returnData;
   }
