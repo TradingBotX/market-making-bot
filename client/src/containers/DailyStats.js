@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { RenderInput } from "../components/FormHelper";
 import { Row, Col, Card, Form } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -13,10 +13,10 @@ const columns = [
     dataField: "exchange",
     text: "Exchange",
   },
-  {
-    dataField: "amount",
-    text: "Amount",
-  },
+  // {
+  //   dataField: "amount",
+  //   text: "Amount",
+  // },
   {
     dataField: "currency",
     text: "Currency",
@@ -35,8 +35,8 @@ const columns = [
   },
   {
     dataField: "diffUSDT",
-    text: "Difference(USDT)"
-  }
+    text: "Difference(USDT)",
+  },
 ];
 
 const prepopulatedData = [
@@ -63,45 +63,122 @@ export class DailyStats extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     const keys = Object.keys(this.props.dailyStatsReducer);
-    keys.forEach(prop => {
-      if (prevProps.dailyStatsReducer[prop].v !== this.props.dailyStatsReducer[prop].v) {
+    keys.forEach((prop) => {
+      if (
+        prevProps.dailyStatsReducer[prop].v !==
+        this.props.dailyStatsReducer[prop].v
+      ) {
         if (this.props.dailyStatsReducer[prop].success) {
           AddNoti(this.props.dailyStatsReducer[prop].success, {
             type: "info",
-            position: "bottom-right"
+            position: "bottom-right",
           });
         }
         if (this.props.dailyStatsReducer[prop].error) {
           AddNoti(this.props.dailyStatsReducer[prop].error, {
             type: "error",
-            position: "bottom-right"
+            position: "bottom-right",
           });
         }
       }
     });
-    if (prevProps.dailyStatsReducer.getStatsTime.v !== this.props.dailyStatsReducer.getStatsTime.v) {
+    if (
+      prevProps.dailyStatsReducer.getStatsTime.v !==
+      this.props.dailyStatsReducer.getStatsTime.v
+    ) {
       this.setState({
         times: [
-          <option key={0} value={null}>{"Select"}</option>,
+          <option key={0} value={null}>
+            {"Select"}
+          </option>,
           ...this.props.dailyStatsReducer.getStatsTime.data.map((e, i) => (
-            <option key={i + 1} value={e}>{e}</option>
-          ))
-        ]
+            <option key={i + 1} value={e}>
+              {e}
+            </option>
+          )),
+        ],
       });
     }
   }
 
   renderDataAB(allData) {
     if (!allData) return null;
-    let returnData = [], obj = {};
+    let returnData = [],
+      obj = {};
     for (let i = 0; i < allData.length; i++) {
       let data = allData[i];
-      if (data.account.includes("AB")) {
+
+      // if (data.account.includes("AB")) {
+      if (!data.stats.length) {
+        obj = {
+          exchange: data.exchange,
+          // amount: data.account,
+          currency: "No Data Available",
+        };
+        returnData.push(obj);
+      } else {
+        for (let j = 0; j < data.stats.length; j++) {
+          obj = {
+            exchange: data.exchange,
+            // amount: data.account,
+            currency: data.stats[j].currency,
+            yesterday: data.stats[j].yesterdayBalance,
+            today: data.stats[j].todayBalance,
+            diff: data.stats[j].balanceChange,
+            diffUSDT: data.stats[j].diffUSDT || 0,
+          };
+          returnData.push(obj);
+        }
+      }
+      // }
+    }
+    return returnData;
+  }
+
+  // renderDataVB(allData) {
+  //   if (!allData) return null;
+  //   let returnData = [], obj = {};
+  //   for (let i = 0; i < allData.length; i++) {
+  //     let data = allData[i];
+  //     if (data.account.includes("VB")) {
+  //       if (!data.stats.length) {
+  //         obj = {
+  //           exchange: data.exchange,
+  //           amount: data.account,
+  //           currency: "No Data Available"
+  //         };
+  //         returnData.push(obj);
+  //       } else {
+  //         for (let j = 0; j < data.stats.length; j++) {
+  //           obj = {
+  //             exchange: data.exchange,
+  //             amount: data.account,
+  //             currency: data.stats[j].currency,
+  //             yesterday: data.stats[j].yesterdayBalance,
+  //             today: data.stats[j].todayBalance,
+  //             diff: data.stats[j].balanceChange,
+  //             diffUSDT: data.stats[j].diffUSDT || 0
+  //           };
+  //           returnData.push(obj);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return returnData;
+  // }
+
+  renderDataTotal(allData) {
+    if (!allData) return null;
+    let returnData = [],
+      obj = {};
+    for (let i = 0; i < allData.length; i++) {
+      let data = allData[i];
+      if (data.account.includes("total")) {
         if (!data.stats.length) {
           obj = {
             exchange: data.exchange,
-            amount: data.account,
-            currency: "No Data Available"
+            // amount: data.account,
+            currency: "No Data Available",
           };
           returnData.push(obj);
         } else {
@@ -114,70 +191,6 @@ export class DailyStats extends Component {
               today: data.stats[j].todayBalance,
               diff: data.stats[j].balanceChange,
               diffUSDT: data.stats[j].diffUSDT || 0,
-            };
-            returnData.push(obj);
-          }
-        }
-      }
-    }
-    return returnData;
-  }
-
-  renderDataVB(allData) {
-    if (!allData) return null;
-    let returnData = [], obj = {};
-    for (let i = 0; i < allData.length; i++) {
-      let data = allData[i];
-      if (data.account.includes("VB")) {
-        if (!data.stats.length) {
-          obj = {
-            exchange: data.exchange,
-            amount: data.account,
-            currency: "No Data Available"
-          };
-          returnData.push(obj);
-        } else {
-          for (let j = 0; j < data.stats.length; j++) {
-            obj = {
-              exchange: data.exchange,
-              amount: data.account,
-              currency: data.stats[j].currency,
-              yesterday: data.stats[j].yesterdayBalance,
-              today: data.stats[j].todayBalance,
-              diff: data.stats[j].balanceChange,
-              diffUSDT: data.stats[j].diffUSDT || 0
-            };
-            returnData.push(obj);
-          }
-        }
-      }
-    }
-    return returnData;
-  }
-
-  renderDataTotal(allData) {
-    if (!allData) return null;
-    let returnData = [], obj = {};
-    for (let i = 0; i < allData.length; i++) {
-      let data = allData[i];
-      if (data.account.includes("total")) {
-        if (!data.stats.length) {
-          obj = {
-            exchange: data.exchange,
-            amount: data.account,
-            currency: "No Data Available"
-          };
-          returnData.push(obj);
-        } else {
-          for (let j = 0; j < data.stats.length; j++) {
-            obj = {
-              exchange: data.exchange,
-              amount: data.account,
-              currency: data.stats[j].currency,
-              yesterday: data.stats[j].yesterdayBalance,
-              today: data.stats[j].todayBalance,
-              diff: data.stats[j].balanceChange,
-              diffUSDT: data.stats[j].diffUSDT || 0
             };
             returnData.push(obj);
           }
@@ -202,7 +215,9 @@ export class DailyStats extends Component {
                       <select
                         value={this.state.time}
                         onChange={(e) => {
-                          this.props.getStatsData({ timestamp: e.target.value });
+                          this.props.getStatsData({
+                            timestamp: e.target.value,
+                          });
                         }}
                       >
                         {this.state.times}
@@ -214,7 +229,7 @@ export class DailyStats extends Component {
             </Card>
           </Col>
         </Row>
-        <div className="section-title">Arbitrage Daily Stats Data</div>
+        <div className="section-title">Daily Stats Data</div>
         <Row>
           <Col md={12} lg={12} sm={12}>
             <Card className="simple-card">
@@ -230,7 +245,7 @@ export class DailyStats extends Component {
             </Card>
           </Col>
         </Row>
-        <div className="section-title">Volume Daily Stats Data</div>
+        {/* <div className="section-title">Volume Daily Stats Data</div>
         <Row>
           <Col md={12} lg={12} sm={12}>
             <Card className="simple-card">
@@ -245,7 +260,7 @@ export class DailyStats extends Component {
               </div>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
         <div className="section-title">Total Daily Stats Data</div>
         <Row>
           <Col md={12} lg={12} sm={12}>
@@ -274,7 +289,7 @@ function mapStateToProps({ auth, dailyStatsReducer }) {
 function mapDispathToProps(dispatch) {
   return {
     getStatsTime: () => dispatch(actions.getDailyStatsTime()),
-    getStatsData: (data) => dispatch(actions.getDailyStatsData(data))
+    getStatsData: (data) => dispatch(actions.getDailyStatsData(data)),
   };
 }
 
