@@ -4,9 +4,9 @@ services:
     image: mongo:latest
     container_name: mongodb-container
     ports:
-      - "127.0.0.1:27017:27017"
+      - "127.0.0.1:27017:27017"  # Port mapping to localhost
     volumes:
-      - mongodb-data:/data/db
+      - ./mongodb-data:/data/db  # Mount a local directory into the container
     logging:
       driver: none
 
@@ -14,7 +14,7 @@ services:
     image: redis:latest
     container_name: redis-container
     ports:
-      - "127.0.0.1:6379:6379"
+      - "127.0.0.1:6379:6379"  # Port mapping to localhost
     logging:
       driver: none
 
@@ -40,7 +40,5 @@ services:
     depends_on:
       - mongodb
       - redis
-    command: ["npm", "start"]
+    command: ["pm2-runtime", "start", "npm", "--", "start"]
 
-volumes:
-  mongodb-data:

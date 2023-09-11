@@ -1,6 +1,9 @@
 # Use an official Node.js runtime as the base image
 FROM node:16
 
+# Install PM2 globally
+RUN npm install pm2 -g
+
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
@@ -17,5 +20,5 @@ COPY . .
 # Expose the port that your Node.js app will run on
 EXPOSE 3000
 
-# Command to start your Node.js app
+# Use PM2 to start your Node.js app
 CMD [ "npm", "start" ]
