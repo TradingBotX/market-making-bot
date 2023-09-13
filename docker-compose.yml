@@ -43,5 +43,5 @@ services:
     # command: ["pm2-runtime", "start", "npm", "--", "start"]
     command: ["npm", "start"]
 
-  volumes:
+volumes:
   mongodb-data:
