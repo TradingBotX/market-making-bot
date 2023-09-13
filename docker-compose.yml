@@ -37,6 +37,7 @@ services:
     container_name: nodejs-api-container
     ports:
       - "5000:5000"
+      - "3002:3002"
     depends_on:
       - mongodb
       - redis
