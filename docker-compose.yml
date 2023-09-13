@@ -6,7 +6,7 @@ services:
     ports:
       - "127.0.0.1:27017:27017"  # Port mapping to localhost
     volumes:
-      - ./mongodb-data:/data/db  # Mount a local directory into the container
+      - mongodb-data:/data/db  # Mount a local directory into the container
     logging:
       driver: none
 
@@ -40,5 +40,6 @@ services:
     depends_on:
       - mongodb
       - redis
-    command: ["pm2-runtime", "start", "npm", "--", "start"]
+    # command: ["pm2-runtime", "start", "npm", "--", "start"]
+    command: ["npm", "start"]
 

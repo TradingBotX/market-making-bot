@@ -11,6 +11,7 @@ import {
   PairDecimalsAmount,
 } from "../helpers/constant";
 import StaticTable from "./StaticTable";
+import DataTable from "./DataTable";
 
 const initialState = { balances: { data: [], ts: null } };
 
@@ -25,10 +26,10 @@ const columns = [
     dataField: "currency",
     text: "Currency",
   },
-  {
-    dataField: "account",
-    text: "Account",
-  },
+  // {
+  //   dataField: "account",
+  //   text: "Account",
+  // },
   {
     dataField: "balance",
     text: "Balance",
@@ -43,15 +44,33 @@ const columns = [
       return { width: "100px", textAlign: "left" };
     },
   },
+  {
+    dataField: "total",
+    text: "Total",
+    headerStyle: () => {
+      return { width: "100px", textAlign: "left" };
+    },
+  },
 ];
 
 const prepopulatedExchange = [
   {
     id: 1,
-    account: (
+    exchange: (
       <div className="table-one__loader">
         <FontAwesomeIcon icon={faCogs} size="5x" />
         <div>LOADING</div>
+      </div>
+    ),
+  },
+];
+
+const EmptyData = [
+  {
+    id: 1,
+    exchange: (
+      <div className="table-one__loader">
+        <div>No Data</div>
       </div>
     ),
   },
@@ -78,7 +97,6 @@ class Wallet extends Component {
       nextProps.socketReducer.socket.emit("joinRooms", rooms);
 
       nextProps.socketReducer.socket.on("balances", (balances) => {
-        // console.log("balances", balances);
         const exchanges = Object.keys(balances);
         let data = [],
           ts;
@@ -95,10 +113,14 @@ class Wallet extends Component {
     return balances.map((balance, i) => {
       return {
         id: i,
-        account: balance.botName,
+        // account: balance.botName,
         exchange: balance.exchange,
         currency: balance.currency,
-        inTrade: balance.inTrade,
+        inTrade: AddDelimiter(
+          parseFloat(balance.inTrade).toFixed(
+            PairDecimalsAmount[`${balance.currency}-USDT`]
+          )
+        ),
         balance:
           balance.balance >= balance.minBalance ? (
             <span className="blue">
@@ -117,6 +139,11 @@ class Wallet extends Component {
               )}
             </span>
           ),
+        total: AddDelimiter(
+          parseFloat(balance.total).toFixed(
+            PairDecimalsAmount[`${balance.currency}-USDT`]
+          )
+        ),
       };
     });
   }
@@ -127,12 +154,13 @@ class Wallet extends Component {
         <Card className="simple-card">
           <div className="simple-card--header">{this.props.header || ""}</div>
           <div className="simple-card--body">
-            <StaticTable
+            <DataTable
               columns={columns}
               renderData={this.renderBalances}
               data={this.state.balances.data}
               prepopulatedData={prepopulatedExchange}
-              sizePerPage={4}
+              sizePerPage={6}
+              emptyData={EmptyData}
             />
           </div>
         </Card>

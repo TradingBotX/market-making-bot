@@ -182,7 +182,7 @@ async function emitStarterData(room, socket) {
         data = data.reduce((acc, e) => {
           const index = acc.includesPartial({
             currency: e.currency,
-            botName: e.botName,
+            // botName: e.botName,
           });
           if (index !== null) {
             acc[index].balance += e.balance;

@@ -121,9 +121,9 @@ class Sidebar extends React.Component {
             )}
           /> */}
 
-          {/* {this.renderRouteButton("Monitor", faChartArea, "/monitor", () => {
+          {this.renderRouteButton("Monitor", faChartArea, "/monitor", () => {
             this.setState({ activeLink: "/monitor" });
-          })} */}
+          })}
         </div>
 
         <div>

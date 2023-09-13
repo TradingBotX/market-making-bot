@@ -52,6 +52,7 @@ require("./helpers/logger");
 require("./helpers/RESPONSE");
 require("./helpers/MAIL");
 require("./helpers/socket_io");
+require("./crons/walletBalanceCron");
 require("./crons/scheduledCrons");
 require("./helpers/exchangeSocket/bitfinex");
 

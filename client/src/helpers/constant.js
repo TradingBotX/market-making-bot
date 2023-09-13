@@ -196,7 +196,7 @@ export const FormatDateTime = (x) => {
 export const PairDecimalsAmount = {
   "XDC-USDT": 0,
   "XDC-XRP": 0,
-  "BTC-USDT": 5,
+  "BTC-USDT": 4,
   "USDT-USDT": 0,
   "BRG-USDT": 0,
   "BRG-BTC": 0,
@@ -207,8 +207,9 @@ export const PairDecimalsAmount = {
   "XDC-USDC": 0,
   "PLI-USDT": 0,
   "LUNA-USDT": 0,
-  "XRP-USDT": 1,
+  "XRP-USDT": 4,
   "LBT-USDT": 0,
+  "ETH-USDT": 4,
 };
 
 export const CurrencyDecimalsAmount = {

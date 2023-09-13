@@ -10,6 +10,7 @@ import DataTable from "./DataTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCogs } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import Wallet from "./Wallet";
 
 const columns = [
   {
@@ -220,7 +221,7 @@ class Liquidity extends Component {
     return (
       <div className="main-panel">
         <Row>
-          <Col xs="12" sm="12" md="12" lg="8" xl="8">
+          <Col xs="12" sm="12" md="12" lg="6" xl="6">
             <Card className="simple-card">
               <div className="simple-card--header">Add Liquidity</div>
               <div className="simple-card--body">
@@ -396,6 +397,9 @@ class Liquidity extends Component {
                 </Form>
               </div>
             </Card>
+          </Col>
+          <Col xs="12" sm="12" md="12" lg="6" xl="6">
+            <Wallet />
           </Col>
         </Row>
         <Row>
